@@ -62,6 +62,12 @@
 
         <main id="contenido" class="flex-grow-1 p-4">
             <h1 class="h3 mb-4">{{ $titulo }}</h1>
+            @if (session('estado'))
+                <div class="alert alert-success" role="status">{{ session('estado') }}</div>
+            @endif
+            @if (session('error'))
+                <div class="alert alert-danger" role="alert">{{ session('error') }}</div>
+            @endif
             {{ $slot }}
         </main>
     </div>

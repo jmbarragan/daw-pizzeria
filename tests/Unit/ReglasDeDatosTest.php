@@ -99,6 +99,26 @@ class ReglasDeDatosTest extends TestCase
     }
 
     /**
+     * Horas de turno en HH:MM de 24 horas, que es lo que envía el campo de hora
+     * del navegador; sin segundos y con las dos cifras de la hora.
+     *
+     * @return array<string, array{0: string, 1: bool}>
+     */
+    public static function horas(): array
+    {
+        return [
+            'hora de la cena' => ['20:30', true],
+            'último minuto del día' => ['23:59', true],
+            'medianoche' => ['00:00', true],
+            'hora de una cifra' => ['9:30', false],
+            'con segundos' => ['20:30:00', false],
+            'las 24:00' => ['24:00', false],
+            'minuto 60' => ['20:60', false],
+            'texto' => ['por la noche', false],
+        ];
+    }
+
+    /**
      * Nombres de categoría, de 2 a 40 caracteres. Se usa «ñ», que ocupa dos
      * bytes, para ver que se cuentan caracteres.
      *
@@ -176,6 +196,19 @@ class ReglasDeDatosTest extends TestCase
     public function test_codigo_de_pedido(string $entrada, bool $esperado): void
     {
         $this->assertSame($esperado, $this->acepta($entrada, ReglasDeDatos::codigoDePedido()));
+    }
+
+    /**
+     * La regla de hora acepta o rechaza cada caso de horas().
+     *
+     * @param  string  $entrada  hora probada
+     * @param  bool  $esperado  si debe aceptarse
+     * @return void
+     */
+    #[DataProvider('horas')]
+    public function test_hora(string $entrada, bool $esperado): void
+    {
+        $this->assertSame($esperado, $this->acepta($entrada, ReglasDeDatos::hora()));
     }
 
     /**
