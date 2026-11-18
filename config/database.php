@@ -17,7 +17,7 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'sqlite'),
+    'default' => env('DB_CONNECTION', 'web'),
 
     /*
     |--------------------------------------------------------------------------
@@ -31,6 +31,54 @@ return [
     */
 
     'connections' => [
+
+        'admin' => [
+            'driver' => 'mysql',
+            'host' => env('DB_HOST', '127.0.0.1'),
+            'port' => env('DB_PORT', '3306'),
+            'database' => env('DB_DATABASE', 'focaccia_trevi'),
+            'username' => env('DB_ADMIN_USUARIO', 'focaccia_admin'),
+            'password' => env('DB_ADMIN_CONTRASENA', ''),
+            'unix_socket' => env('DB_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_spanish_ci',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => 'InnoDB',
+        ],
+
+        'web' => [
+            'driver' => 'mysql',
+            'host' => env('DB_HOST', '127.0.0.1'),
+            'port' => env('DB_PORT', '3306'),
+            'database' => env('DB_DATABASE', 'focaccia_trevi'),
+            'username' => env('DB_WEB_USUARIO', 'focaccia_web'),
+            'password' => env('DB_WEB_CONTRASENA', ''),
+            'unix_socket' => env('DB_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_spanish_ci',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => 'InnoDB',
+        ],
+
+        'gestion' => [
+            'driver' => 'mysql',
+            'host' => env('DB_HOST', '127.0.0.1'),
+            'port' => env('DB_PORT', '3306'),
+            'database' => env('DB_DATABASE', 'focaccia_trevi'),
+            'username' => env('DB_GESTION_USUARIO', 'focaccia_gestion'),
+            'password' => env('DB_GESTION_CONTRASENA', ''),
+            'unix_socket' => env('DB_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_spanish_ci',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => 'InnoDB',
+        ],
 
         'sqlite' => [
             'driver' => 'sqlite',
@@ -130,6 +178,20 @@ return [
     'migrations' => [
         'table' => 'migrations',
         'update_date_on_publish' => true,
+    ],
+
+    // datos que solo usa «php artisan basedatos:permisos» al instalar
+    'instalacion' => [
+        'base_pruebas' => env('DB_BASE_PRUEBAS'),
+        'anfitrion_usuarios' => env('DB_USUARIOS_ANFITRION', 'localhost'),
+        'root' => [
+            'usuario' => env('DB_ROOT_USUARIO', 'root'),
+            'contrasena' => env('DB_ROOT_CONTRASENA'),
+        ],
+        'informes' => [
+            'usuario' => env('DB_INFORMES_USUARIO', 'focaccia_informes'),
+            'contrasena' => env('DB_INFORMES_CONTRASENA'),
+        ],
     ],
 
     /*
