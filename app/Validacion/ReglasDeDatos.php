@@ -66,6 +66,17 @@ final class ReglasDeDatos
     }
 
     /**
+     * Hora de un turno en formato HH:MM de 24 horas, como la envía el campo
+     * de hora del navegador. Ejemplo: 20:30.
+     *
+     * @return list<string>
+     */
+    public static function hora(): array
+    {
+        return ['string', 'date_format:H:i'];
+    }
+
+    /**
      * Nombre de texto libre con la longitud de su columna: 40 para categorías
      * y alérgenos, 60 para productos y 80 para personas.
      *

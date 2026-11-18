@@ -56,4 +56,20 @@ class Horario extends Model
     {
         return $this->hasMany(Pedido::class);
     }
+
+    /**
+     * Indica si unas horas pisan las de este turno. Que una empiece justo
+     * cuando acaba la otra no es pisarse: 13:00–16:00 y 16:00–18:00 conviven.
+     * Es la misma condición que comprueba el disparador de la base de datos.
+     *
+     * @param  string  $apertura  hora HH:MM o HH:MM:SS
+     * @param  string  $cierre  hora HH:MM o HH:MM:SS
+     * @return bool
+     */
+    public function seSolapaCon(string $apertura, string $cierre): bool
+    {
+        $propia = [substr($this->hora_apertura, 0, 5), substr($this->hora_cierre, 0, 5)];
+
+        return substr($apertura, 0, 5) < $propia[1] && substr($cierre, 0, 5) > $propia[0];
+    }
 }
