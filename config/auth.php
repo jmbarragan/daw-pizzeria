@@ -1,6 +1,7 @@
 <?php
 
-use App\Models\User;
+use App\Models\Cliente;
+use App\Models\Usuario;
 
 return [
 
@@ -16,8 +17,8 @@ return [
     */
 
     'defaults' => [
-        'guard' => env('AUTH_GUARD', 'web'),
-        'passwords' => env('AUTH_PASSWORD_BROKER', 'users'),
+        'guard' => env('AUTH_GUARD', 'personal'),
+        'passwords' => env('AUTH_PASSWORD_BROKER', 'personal'),
     ],
 
     /*
@@ -38,9 +39,15 @@ return [
     */
 
     'guards' => [
-        'web' => [
+        // zona de gestión: empleados y administradores (RF-10)
+        'personal' => [
             'driver' => 'session',
-            'provider' => 'users',
+            'provider' => 'personal',
+        ],
+        // zona pública: clientes registrados (RF-08)
+        'cliente' => [
+            'driver' => 'session',
+            'provider' => 'clientes',
         ],
     ],
 
@@ -62,15 +69,15 @@ return [
     */
 
     'providers' => [
-        'users' => [
+        'personal' => [
             'driver' => 'eloquent',
-            'model' => env('AUTH_MODEL', User::class),
+            'model' => Usuario::class,
         ],
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+        'clientes' => [
+            'driver' => 'eloquent',
+            'model' => Cliente::class,
+        ],
     ],
 
     /*
@@ -93,8 +100,8 @@ return [
     */
 
     'passwords' => [
-        'users' => [
-            'provider' => 'users',
+        'personal' => [
+            'provider' => 'personal',
             'table' => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'password_reset_tokens'),
             'expire' => 60,
             'throttle' => 60,

@@ -1,0 +1,16 @@
+# Análisis estático con PHPStan y la extensión de Laravel (Larastan).
+# Se ejecuta con: vendor/bin/phpstan analyse
+includes:
+    - vendor/larastan/larastan/extension.neon
+
+parameters:
+    level: 5
+    # lee las conversiones del cuerpo de casts(), no solo de su @return
+    parseModelCastsMethod: true
+    paths:
+        - app
+        - bootstrap/app.php
+        - config
+        - database
+        - routes
+        - tests

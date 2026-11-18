@@ -1,0 +1,47 @@
+# Servicios de apoyo para trabajar en local: MySQL 8.4 y Mailpit.
+# La aplicación se arranca aparte con «php artisan serve».
+# Los usuarios y contraseñas salen del fichero .env (ver .env.example).
+
+services:
+  mysql:
+    image: mysql:8.4.13
+    restart: unless-stopped
+    # En la orden de arranque porque MySQL ignora un .cnf montado desde Windows.
+    command:
+      - --event-scheduler=ON
+      - --log-bin-trust-function-creators=1
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_spanish_ci
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_CONTRASENA:?Falta DB_ROOT_CONTRASENA en .env}
+      DB_DATABASE: ${DB_DATABASE:-focaccia_trevi}
+      DB_BASE_PRUEBAS: ${DB_BASE_PRUEBAS:-focaccia_trevi_pruebas}
+      DB_ADMIN_USUARIO: ${DB_ADMIN_USUARIO:-focaccia_admin}
+      DB_ADMIN_CONTRASENA: ${DB_ADMIN_CONTRASENA:?Falta DB_ADMIN_CONTRASENA en .env}
+      DB_WEB_USUARIO: ${DB_WEB_USUARIO:-focaccia_web}
+      DB_WEB_CONTRASENA: ${DB_WEB_CONTRASENA:?Falta DB_WEB_CONTRASENA en .env}
+      DB_GESTION_USUARIO: ${DB_GESTION_USUARIO:-focaccia_gestion}
+      DB_GESTION_CONTRASENA: ${DB_GESTION_CONTRASENA:?Falta DB_GESTION_CONTRASENA en .env}
+      TZ: Europe/Madrid
+    ports:
+      - "${DB_PORT:-3306}:3306"
+    volumes:
+      - datos-mysql:/var/lib/mysql
+      - ./docker/mysql/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "--silent"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  mailpit:
+    image: axllent/mailpit:v1.32.0
+    restart: unless-stopped
+    environment:
+      TZ: Europe/Madrid
+    ports:
+      - "${MAIL_PORT:-1025}:1025"
+      - "${MAILPIT_PUERTO_PANEL:-8025}:8025"
+
+volumes:
+  datos-mysql:
