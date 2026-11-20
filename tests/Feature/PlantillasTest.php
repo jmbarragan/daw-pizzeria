@@ -7,15 +7,19 @@
 namespace Tests\Feature;
 
 use App\Models\Usuario;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 /**
  * Comprueba la estructura común de las pantallas: idioma, título y
  * descripción propios, enlace para saltar al contenido, menú público con la
  * cesta, menú de gestión según el rol y páginas de error propias en español.
+ * El inicio lee el horario, así que las pruebas necesitan la base migrada.
  */
 class PlantillasTest extends TestCase
 {
+    use RefreshDatabase;
+
     /**
      * El inicio se sirve en español, con su título, su descripción, el salto al
      * contenido y el menú público con la cesta vacía.

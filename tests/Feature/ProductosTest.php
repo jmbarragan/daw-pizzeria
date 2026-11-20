@@ -50,7 +50,7 @@ class ProductosTest extends TestCase
         $this->actingAs(Usuario::create([
             'nombre' => 'Elena Navarro',
             'email' => 'elena.navarro@focaccia.example',
-            'contrasena' => 'Trevi.2026.horno',
+            'contrasena' => $this->contrasenaDePrueba(),
             'rol' => Usuario::ROL_EMPLEADO,
             'activo' => true,
         ]), 'personal');

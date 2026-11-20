@@ -2,9 +2,10 @@
     Plantilla de la zona pública (pantallas P del diseño). Cabecera fija con
     Carta, Ayuda, Acceder y la cesta con su número de productos (RF-03).
     Cada página pasa su título y su descripción para los buscadores (RNF-04).
-    Las páginas de error sin sesión disponible pasan :con-cesta="false".
+    Las páginas de error sin sesión disponible pasan :con-cesta="false", y las
+    de un pedido concreto (recibido y seguimiento), :indexar="false".
 --}}
-@props(['titulo', 'descripcion' => 'Pizzas al horno de leña para recoger en el local. Pide en la web y pasa a por tu pedido.', 'conCesta' => true])
+@props(['titulo', 'descripcion' => 'Pizzas al horno de leña para recoger en el local. Pide en la web y pasa a por tu pedido.', 'conCesta' => true, 'indexar' => true])
 
 @php
     $productosEnCesta = $conCesta ? array_sum(session('cesta', [])) : 0;
@@ -16,6 +17,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="{{ $descripcion }}">
+    @unless ($indexar)
+        <meta name="robots" content="noindex">
+    @endunless
     <title>{{ $titulo }} · La Focaccia di Trevi</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
@@ -45,6 +49,16 @@
     </header>
 
     <main id="contenido" class="container py-4 flex-grow-1">
+        @if ($conCesta && session('estado'))
+            <div class="alert alert-success" role="status">{{ session('estado') }}</div>
+        @endif
+        @if ($conCesta && session('error'))
+            <div class="alert alert-danger" role="alert">{{ session('error') }}</div>
+        @endif
+        @if ($conCesta && session('aviso_pizzas'))
+            <x-aviso-de-pizzas :maximo="session('aviso_pizzas')"
+                               :telefono="app(\App\Servicios\AjustesPublicos::class)->valor('telefono_local')" />
+        @endif
         {{ $slot }}
     </main>
 

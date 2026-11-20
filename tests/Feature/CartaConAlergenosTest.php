@@ -44,7 +44,7 @@ class CartaConAlergenosTest extends TestCase
         $this->actingAs(Usuario::create([
             'nombre' => 'Sergio Molina',
             'email' => 'sergio.molina@focaccia.example',
-            'contrasena' => 'Trevi.2026.horno',
+            'contrasena' => $this->contrasenaDePrueba(),
             'rol' => Usuario::ROL_EMPLEADO,
             'activo' => true,
         ]), 'personal');

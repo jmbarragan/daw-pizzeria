@@ -37,13 +37,6 @@ class BloqueoDeAccesosTest extends TestCase
     private const IP = '203.0.113.20';
 
     /**
-     * Contraseña buena de la cuenta de prueba.
-     *
-     * @var string
-     */
-    private const CONTRASENA = 'Trevi.2026.horno';
-
-    /**
      * Cuenta del personal con la que se prueba.
      *
      * @var Usuario
@@ -64,7 +57,7 @@ class BloqueoDeAccesosTest extends TestCase
         $this->usuario = Usuario::create([
             'nombre' => 'Lucía Ferro',
             'email' => 'lucia.ferro@focaccia.example',
-            'contrasena' => self::CONTRASENA,
+            'contrasena' => $this->contrasenaDePrueba(),
             'rol' => Usuario::ROL_EMPLEADO,
             'activo' => true,
         ]);
@@ -110,12 +103,12 @@ class BloqueoDeAccesosTest extends TestCase
             $this->entrar('no.es.esta.1');
         }
 
-        $this->entrar(self::CONTRASENA)
+        $this->entrar($this->contrasenaDePrueba())
             ->assertSessionHasErrors(['email' => 'Demasiados intentos seguidos. Espera un minuto y vuelve a probar.']);
         $this->assertGuest('personal');
 
         $this->travel(61)->seconds();
-        $this->entrar(self::CONTRASENA)->assertRedirect('/gestion/pedidos');
+        $this->entrar($this->contrasenaDePrueba())->assertRedirect('/gestion/pedidos');
     }
 
     /**
@@ -134,11 +127,11 @@ class BloqueoDeAccesosTest extends TestCase
         $this->get('/gestion/acceso')
             ->assertForbidden()
             ->assertSee('Podrás volver a intentarlo el '.$bloqueo->fin->format('d/m/Y'));
-        $this->entrar(self::CONTRASENA)->assertForbidden();
+        $this->entrar($this->contrasenaDePrueba())->assertForbidden();
         $this->assertGuest('personal');
 
         $this->travel(25)->hours();
-        $this->entrar(self::CONTRASENA)->assertRedirect('/gestion/pedidos');
+        $this->entrar($this->contrasenaDePrueba())->assertRedirect('/gestion/pedidos');
     }
 
     /**
@@ -169,7 +162,7 @@ class BloqueoDeAccesosTest extends TestCase
         $this->fallar(9);
         $this->travel(61)->seconds();
 
-        $this->entrar(self::CONTRASENA)->assertRedirect('/gestion/pedidos');
+        $this->entrar($this->contrasenaDePrueba())->assertRedirect('/gestion/pedidos');
         $this->post('/gestion/salir');
         $this->fallar(1);
 
@@ -189,7 +182,7 @@ class BloqueoDeAccesosTest extends TestCase
         $propia = Usuario::create([
             'nombre' => 'Pablo Gil',
             'email' => 'pablo.gil@focaccia.example',
-            'contrasena' => self::CONTRASENA,
+            'contrasena' => $this->contrasenaDePrueba(),
             'rol' => Usuario::ROL_EMPLEADO,
             'activo' => true,
         ]);
@@ -198,7 +191,7 @@ class BloqueoDeAccesosTest extends TestCase
         $this->travel(61)->seconds();
 
         $this->from('/gestion/acceso')
-            ->post('/gestion/acceso', ['email' => $propia->email, 'contrasena' => self::CONTRASENA])
+            ->post('/gestion/acceso', ['email' => $propia->email, 'contrasena' => $this->contrasenaDePrueba()])
             ->assertRedirect('/gestion/pedidos');
         $this->post('/gestion/salir');
         $this->fallar(1);
@@ -218,7 +211,7 @@ class BloqueoDeAccesosTest extends TestCase
         $propia = Usuario::create([
             'nombre' => 'Pablo Gil',
             'email' => 'pablo.gil@focaccia.example',
-            'contrasena' => self::CONTRASENA,
+            'contrasena' => $this->contrasenaDePrueba(),
             'rol' => Usuario::ROL_EMPLEADO,
             'activo' => true,
         ]);
@@ -242,7 +235,7 @@ class BloqueoDeAccesosTest extends TestCase
         $this->fallar(9);
         $this->travel(61)->seconds();
         $this->from('/gestion/acceso')
-            ->post('/gestion/acceso', ['email' => $propia->email, 'contrasena' => self::CONTRASENA])
+            ->post('/gestion/acceso', ['email' => $propia->email, 'contrasena' => $this->contrasenaDePrueba()])
             ->assertRedirect('/gestion/pedidos');
         $this->post('/gestion/salir');
         $this->fallar(1);
@@ -260,6 +253,6 @@ class BloqueoDeAccesosTest extends TestCase
         $this->fallar(10);
 
         $this->withServerVariables(['REMOTE_ADDR' => '203.0.113.21']);
-        $this->entrar(self::CONTRASENA)->assertRedirect('/gestion/pedidos');
+        $this->entrar($this->contrasenaDePrueba())->assertRedirect('/gestion/pedidos');
     }
 }
