@@ -33,13 +33,6 @@ class AccesoPersonalTest extends TestCase
     protected $connectionsToTransact = ['gestion'];
 
     /**
-     * Contraseña de las cuentas que crea la prueba.
-     *
-     * @var string
-     */
-    private const CONTRASENA = 'Trevi.2026.horno';
-
-    /**
      * Los datos de la prueba se crean con la conexión de gestión.
      *
      * @return void
@@ -62,7 +55,7 @@ class AccesoPersonalTest extends TestCase
         return Usuario::create([
             'nombre' => 'Lucía Ferro',
             'email' => "lucia.{$rol}@focaccia.example",
-            'contrasena' => self::CONTRASENA,
+            'contrasena' => $this->contrasenaDePrueba(),
             'rol' => $rol,
             'activo' => $activo,
         ]);
@@ -77,7 +70,7 @@ class AccesoPersonalTest extends TestCase
     {
         $usuario = $this->crearPersonal();
 
-        $this->post('/gestion/acceso', ['email' => $usuario->email, 'contrasena' => self::CONTRASENA])
+        $this->post('/gestion/acceso', ['email' => $usuario->email, 'contrasena' => $this->contrasenaDePrueba()])
             ->assertRedirect('/gestion/pedidos');
 
         $this->assertAuthenticatedAs($usuario, 'personal');
@@ -103,7 +96,7 @@ class AccesoPersonalTest extends TestCase
             ->assertRedirect('/gestion/acceso')
             ->assertSessionHasErrors(['email' => 'Correo o contraseña incorrectos.']);
 
-        $this->post('/gestion/acceso', ['email' => 'nadie@focaccia.example', 'contrasena' => self::CONTRASENA])
+        $this->post('/gestion/acceso', ['email' => 'nadie@focaccia.example', 'contrasena' => $this->contrasenaDePrueba()])
             ->assertSessionHasErrors(['email' => 'Correo o contraseña incorrectos.']);
 
         $this->assertGuest('personal');
@@ -118,7 +111,7 @@ class AccesoPersonalTest extends TestCase
     {
         $usuario = $this->crearPersonal(activo: false);
 
-        $this->post('/gestion/acceso', ['email' => $usuario->email, 'contrasena' => self::CONTRASENA])
+        $this->post('/gestion/acceso', ['email' => $usuario->email, 'contrasena' => $this->contrasenaDePrueba()])
             ->assertSessionHasErrors('email');
 
         $this->assertGuest('personal');

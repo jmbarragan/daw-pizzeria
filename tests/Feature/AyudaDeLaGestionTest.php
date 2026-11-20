@@ -43,7 +43,7 @@ class AyudaDeLaGestionTest extends TestCase
         $this->actingAs(Usuario::create([
             'nombre' => 'Pablo Gil',
             'email' => 'pablo.gil@focaccia.example',
-            'contrasena' => 'Trevi.2026.horno',
+            'contrasena' => $this->contrasenaDePrueba(),
             'rol' => Usuario::ROL_EMPLEADO,
             'activo' => true,
         ]), 'personal');

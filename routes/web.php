@@ -1,19 +1,40 @@
 <?php
 
 /**
- * Rutas web de la aplicación: el inicio público y la zona de gestión. La
- * carta y el pedido se añaden con sus pantallas.
+ * Rutas web de la aplicación: la zona pública (inicio, carta y cesta), con la
+ * conexión «web», y la zona de gestión, con la conexión «gestion».
  */
 
+use App\Http\Controllers\CartaController;
+use App\Http\Controllers\CestaController;
 use App\Http\Controllers\Gestion\AccesoController;
 use App\Http\Controllers\Gestion\AlergenoController;
 use App\Http\Controllers\Gestion\CategoriaController;
 use App\Http\Controllers\Gestion\ContrasenaController;
 use App\Http\Controllers\Gestion\HorarioController;
 use App\Http\Controllers\Gestion\ProductoController;
+use App\Http\Controllers\InicioController;
+use App\Http\Controllers\PedidoController;
+use App\Http\Controllers\SeguimientoController;
 use Illuminate\Support\Facades\Route;
 
-Route::view('/', 'inicio')->name('inicio');
+Route::get('/', [InicioController::class, 'mostrar'])->name('inicio');
+Route::get('carta', [CartaController::class, 'mostrar'])->name('carta');
+Route::view('privacidad', 'privacidad')->name('privacidad');
+
+Route::controller(PedidoController::class)->prefix('pedido')->name('pedido')->group(function () {
+    Route::get('/', 'formulario')->name('');
+    Route::post('/', 'confirmar')->name('.confirmar');
+    Route::get('recibido', 'recibido')->name('.recibido');
+});
+
+Route::get('seguimiento/{token}', [SeguimientoController::class, 'mostrar'])->name('seguimiento');
+Route::controller(CestaController::class)->prefix('cesta')->name('cesta')->group(function () {
+    Route::get('/', 'mostrar')->name('');
+    Route::post('/', 'anadir')->name('.anadir');
+    Route::patch('{producto}', 'cambiar')->name('.cambiar');
+    Route::delete('{producto}', 'quitar')->name('.quitar');
+});
 
 // gestión: siempre con el usuario de MySQL focaccia_gestion
 Route::prefix('gestion')->name('gestion.')->middleware('conexion.gestion')->group(function () {

@@ -47,7 +47,7 @@ class HorarioTest extends TestCase
         $this->empleada = Usuario::create([
             'nombre' => 'Elena Navarro',
             'email' => 'elena.navarro@focaccia.example',
-            'contrasena' => 'Trevi.2026.horno',
+            'contrasena' => $this->contrasenaDePrueba(),
             'rol' => Usuario::ROL_EMPLEADO,
             'activo' => true,
         ]);
