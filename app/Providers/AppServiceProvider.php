@@ -1,11 +1,12 @@
 <?php
 
 /**
- * Proveedor de servicios de la aplicación.
+ * Paginación con Bootstrap y límites de peticiones del acceso del personal y del envío de pedidos.
  */
 
 namespace App\Providers;
 
+use App\Http\Controllers\PedidoController;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
@@ -46,6 +47,13 @@ class AppServiceProvider extends ServiceProvider
                     ->withErrors(['email' => 'Demasiados intentos seguidos. Espera un minuto y vuelve a probar.'])
                     ->onlyInput('email');
             });
+        });
+
+        // cada pedido manda un correo: sin límite, el formulario serviría para escribir a cualquiera.
+        // El límite por correo va en PedidoController, contando solo los pedidos guardados.
+        RateLimiter::for('pedidos', function (Request $peticion) {
+            return Limit::perMinute(5)->by('ip:'.$peticion->ip())->response(fn () => back()->withInput()
+                ->with('error', PedidoController::AVISO_DE_LIMITE));
         });
     }
 }

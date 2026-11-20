@@ -12,6 +12,7 @@ use App\Http\Controllers\Gestion\AlergenoController;
 use App\Http\Controllers\Gestion\CategoriaController;
 use App\Http\Controllers\Gestion\ContrasenaController;
 use App\Http\Controllers\Gestion\HorarioController;
+use App\Http\Controllers\Gestion\PedidoController as GestionDePedidos;
 use App\Http\Controllers\Gestion\ProductoController;
 use App\Http\Controllers\InicioController;
 use App\Http\Controllers\PedidoController;
@@ -24,11 +25,15 @@ Route::view('privacidad', 'privacidad')->name('privacidad');
 
 Route::controller(PedidoController::class)->prefix('pedido')->name('pedido')->group(function () {
     Route::get('/', 'formulario')->name('');
-    Route::post('/', 'confirmar')->name('.confirmar');
+    Route::post('/', 'confirmar')->middleware('throttle:pedidos')->name('.confirmar');
     Route::get('recibido', 'recibido')->name('.recibido');
 });
 
-Route::get('seguimiento/{token}', [SeguimientoController::class, 'mostrar'])->name('seguimiento');
+Route::controller(SeguimientoController::class)->prefix('seguimiento/{token}')->name('seguimiento')->group(function () {
+    Route::get('/', 'mostrar')->name('');
+    Route::get('cancelar', 'confirmarCancelacion')->name('.cancelacion');
+    Route::post('cancelar', 'cancelar')->name('.cancelar');
+});
 Route::controller(CestaController::class)->prefix('cesta')->name('cesta')->group(function () {
     Route::get('/', 'mostrar')->name('');
     Route::post('/', 'anadir')->name('.anadir');
@@ -53,7 +58,15 @@ Route::prefix('gestion')->name('gestion.')->middleware('conexion.gestion')->grou
 
     Route::middleware(['auth:personal', 'cuenta.activa'])->group(function () {
         Route::post('salir', [AccesoController::class, 'salir'])->name('salir');
-        Route::view('pedidos', 'gestion.pedidos')->name('pedidos');
+        Route::prefix('pedidos')->name('pedidos')->controller(GestionDePedidos::class)->group(function () {
+            Route::get('/', 'panel')->name('');
+            Route::get('telefonico', 'telefonico')->name('.telefonico');
+            Route::post('telefonico', 'guardarTelefonico')->name('.telefonico.guardar');
+            Route::get('{pedido:codigo}', 'detalle')->name('.detalle');
+            Route::post('{pedido:codigo}/aceptar', 'aceptar')->name('.aceptar');
+            Route::post('{pedido:codigo}/rechazar', 'rechazar')->name('.rechazar');
+            Route::post('{pedido:codigo}/estado', 'avanzar')->name('.avanzar');
+        });
 
         // horario de apertura por fechas (RF-19)
         Route::prefix('horario')->name('horario')->controller(HorarioController::class)->group(function () {

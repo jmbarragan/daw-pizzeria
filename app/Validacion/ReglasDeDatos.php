@@ -22,14 +22,17 @@ final class ReglasDeDatos
     const PRECIO_MAXIMO = '999.99';
 
     /**
-     * Correo electrónico: formato RFC y como mucho 254 caracteres, el límite
-     * de la columna y de la propia norma.
+     * Correo electrónico: formato RFC sin las formas raras que la norma tolera
+     * con avisos (comentarios entre paréntesis, partes entre comillas), y como
+     * mucho 254 caracteres, el límite de la columna y de la propia norma. Así
+     * una misma dirección no se puede escribir de varias maneras para saltarse
+     * el límite de pedidos por correo (decisión 031).
      *
      * @return list<string>
      */
     public static function correo(): array
     {
-        return ['string', 'max:254', 'email:rfc'];
+        return ['string', 'max:254', 'email:strict'];
     }
 
     /**

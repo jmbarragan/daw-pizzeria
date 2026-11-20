@@ -17,6 +17,7 @@ use App\Servicios\RegistroDePedidos;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\View\View;
 
 /**
@@ -28,6 +29,20 @@ use Illuminate\View\View;
  */
 class PedidoController extends Controller
 {
+    /**
+     * Pedidos guardados que admite un mismo correo en una hora (decisión 031).
+     *
+     * @var int
+     */
+    const PEDIDOS_POR_CORREO = 10;
+
+    /**
+     * Aviso cuando se pasa el límite por IP o por correo.
+     *
+     * @var string
+     */
+    const AVISO_DE_LIMITE = 'Has enviado varios pedidos seguidos. Espera un poco o llámanos para hacer el pedido.';
+
     /**
      * Prepara el controlador con la cesta y el calendario.
      *
@@ -90,9 +105,17 @@ class PedidoController extends Controller
                 ->with('error', 'Antes de enviarlo ha cambiado algo de tu pedido: '.implode('; ', $cambios).'. Revísalo y confírmalo de nuevo.');
         }
 
+        // solo cuentan los pedidos que se guardan: con envíos fallidos nadie puede
+        // gastar el cupo del correo de otra persona
+        $cupo = 'pedidos-correo:'.hash('sha256', mb_strtolower($peticion->cliente()['email']));
+        if (RateLimiter::tooManyAttempts($cupo, self::PEDIDOS_POR_CORREO)) {
+            return redirect()->route('pedido')->withInput()->with('error', self::AVISO_DE_LIMITE);
+        }
+
         $pedido = $registro->registrar(
             $peticion->cliente(), $lineas, $peticion->observaciones(), $this->calendario->fechaPrevista()
         );
+        RateLimiter::hit($cupo, 3600);
 
         $peticion->session()->forget(['cesta', 'precios_vistos']);
         $peticion->session()->put('pedido_recibido', $pedido->id);

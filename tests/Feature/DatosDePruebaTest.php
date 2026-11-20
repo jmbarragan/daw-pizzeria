@@ -43,7 +43,7 @@ class DatosDePruebaTest extends TestCase
     {
         $esperados = [
             'categorias' => 5, 'alergenos' => 14, 'productos' => 10, 'productos_alergenos' => 16, 'horarios' => 8,
-            'usuarios' => 5, 'clientes' => 6, 'pedidos' => 8, 'lineas_pedido' => 10, 'ajustes' => 8, 'bloqueos_ip' => 5,
+            'usuarios' => 5, 'clientes' => 6, 'pedidos' => 8, 'lineas_pedido' => 10, 'ajustes' => 9, 'bloqueos_ip' => 5,
         ];
 
         foreach ($esperados as $tabla => $filas) {

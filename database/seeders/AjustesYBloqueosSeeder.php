@@ -10,7 +10,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
 /**
- * Carga los ocho ajustes del local, cuatro públicos y cuatro del servidor de
+ * Carga los nueve ajustes del local, cinco públicos y cuatro del servidor de
  * correo, y cinco bloqueos de IP con direcciones reservadas para ejemplos. La
  * 203.0.113.7 se bloquea dos veces en 30 días, así que el disparador deja la
  * segunda vez como permanente; el último bloqueo lo levantó la administradora.
@@ -29,6 +29,7 @@ class AjustesYBloqueosSeeder extends Seeder
         $ajustes = [
             ['nombre_local', 'La Focaccia di Trevi', true, 'Nombre que aparece en la web y en los correos'],
             ['telefono_local', '+34100000000', true, 'Teléfono para pedidos grandes y dudas'],
+            ['direccion_local', 'Calle Mayor, 12', true, 'Dirección donde se recogen los pedidos'],
             ['maximo_pizzas', '20', true, 'Pizzas por pedido a partir de las cuales hay que llamar al local'],
             ['politica_privacidad', 'Responsable: La Focaccia di Trevi. Finalidad: gestionar tu pedido y avisarte de su estado. '
                 .'Conservamos tu teléfono y tu correo 30 días después de cerrar el pedido, salvo que tengas cuenta.',

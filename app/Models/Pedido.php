@@ -35,6 +35,21 @@ class Pedido extends Model
     const ESTADOS_FINALES = ['recogido', 'rechazado', 'cancelado', 'no_recogido'];
 
     /**
+     * Nombre de cada estado en las pantallas de la gestión.
+     *
+     * @var array<string, string>
+     */
+    const ETIQUETAS = [
+        'pendiente' => 'Pendiente',
+        'aceptado' => 'Aceptado',
+        'listo' => 'Listo',
+        'recogido' => 'Recogido',
+        'rechazado' => 'Rechazado',
+        'cancelado' => 'Cancelado',
+        'no_recogido' => 'No recogido',
+    ];
+
+    /**
      * Columna con el momento en que se hizo el pedido; sustituye a la
      * created_at de Laravel.
      *
