@@ -6,7 +6,14 @@
 @props(['abierto', 'siguiente', 'telefono' => null])
 
 @php
-    $cuando = function ($turno) {
+    /**
+     * Cuándo abre un turno, dicho como en una conversación: «hoy a las 20:00»,
+     * «mañana a las 13:00» o «el jueves 26 de noviembre a las 20:00».
+     *
+     * @param  \App\Models\Horario  $turno  próximo turno, con su día y su hora de apertura
+     * @return string
+     */
+    $cuando = function (\App\Models\Horario $turno): string {
         $dia = $turno->dia;
         $hora = substr($turno->hora_apertura, 0, 5);
 
