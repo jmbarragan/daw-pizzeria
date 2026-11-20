@@ -10,6 +10,7 @@ use App\Notifications\RecuperarContrasena;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
 
 /**
  * Empleado o administrador que entra en la zona de gestión (RF-10). El
@@ -33,6 +34,14 @@ class Usuario extends Authenticatable
      * @var string
      */
     const ROL_EMPLEADO = 'empleado';
+
+    /**
+     * Correo de la cuenta del rechazo automático; .invalid es un dominio que
+     * no existe, así que nunca recibe ni envía nada.
+     *
+     * @var string
+     */
+    const CORREO_DEL_RECHAZO_AUTOMATICO = 'rechazo-automatico@focaccia.invalid';
 
     /**
      * Fecha de alta.
@@ -114,6 +123,24 @@ class Usuario extends Authenticatable
     public function esAdministrador(): bool
     {
         return $this->rol === self::ROL_ADMINISTRADOR;
+    }
+
+    /**
+     * Cuenta en cuyo nombre se rechazan solos los pedidos pendientes que se
+     * han pasado (decisión 030): la base de datos exige que alguien del
+     * personal figure como quien decide. Está desactivada y su contraseña es
+     * aleatoria, así que nadie puede entrar con ella. Se crea la primera vez.
+     *
+     * @return self
+     */
+    public static function rechazoAutomatico(): self
+    {
+        return self::firstOrCreate(['email' => self::CORREO_DEL_RECHAZO_AUTOMATICO], [
+            'nombre' => 'Rechazo automático',
+            'contrasena' => Str::password(32),
+            'rol' => self::ROL_EMPLEADO,
+            'activo' => false,
+        ]);
     }
 
     /**

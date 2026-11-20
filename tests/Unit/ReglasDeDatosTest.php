@@ -21,7 +21,7 @@ class ReglasDeDatosTest extends TestCase
 {
     /**
      * Correos bien formados frente a los que les falta una parte, llevan un
-     * espacio o pasan de los 254 caracteres de la columna.
+     * espacio, un comentario o comillas, o pasan de los 254 caracteres de la columna.
      *
      * @return array<string, array{0: string, 1: bool}>
      */
@@ -34,6 +34,8 @@ class ReglasDeDatosTest extends TestCase
             'sin dominio' => ['ana@', false],
             'sin usuario' => ['@example.com', false],
             'con un espacio' => ['ana martin@example.com', false],
+            'con un comentario' => ['ana.martin(casa)@example.com', false],
+            'entre comillas' => ['"ana.martin"@example.com', false],
             'de 257 caracteres' => [str_repeat('a', 245).'@example.com', false],
         ];
     }

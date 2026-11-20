@@ -8,6 +8,7 @@ namespace App\Servicios;
 
 use App\Models\Horario;
 use Carbon\Carbon as Fecha;
+use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
@@ -90,6 +91,34 @@ class Calendario
         }
 
         return collect($porDia);
+    }
+
+    /**
+     * Horas de recogida que se pueden ofrecer un día: de 15 en 15 minutos
+     * desde la apertura de cada turno y antes de su cierre, solo las que aún
+     * no han pasado (decisión 029).
+     *
+     * @param  CarbonInterface  $dia  fecha prevista del pedido
+     * @param  Carbon|null  $ahora  momento consultado; por defecto, ahora
+     * @return array<string, Horario> hora HH:MM => turno al que pertenece
+     */
+    public function franjas(CarbonInterface $dia, ?Carbon $ahora = null): array
+    {
+        $ahora ??= now();
+        $franjas = [];
+
+        foreach (Horario::whereDate('dia', $dia->toDateString())->orderBy('hora_apertura')->get() as $turno) {
+            $hora = Carbon::parse($dia->toDateString().' '.$turno->hora_apertura);
+            $cierre = Carbon::parse($dia->toDateString().' '.$turno->hora_cierre);
+
+            for (; $hora->lt($cierre); $hora->addMinutes(15)) {
+                if ($hora->gt($ahora)) {
+                    $franjas[$hora->format('H:i')] = $turno;
+                }
+            }
+        }
+
+        return $franjas;
     }
 
     /**

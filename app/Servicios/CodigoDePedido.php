@@ -7,6 +7,7 @@
 namespace App\Servicios;
 
 use Carbon\CarbonInterface;
+use Random\RandomException;
 
 /**
  * Seis hexadecimales en mayúsculas sorteados con random_bytes y las dos
@@ -18,10 +19,14 @@ use Carbon\CarbonInterface;
 class CodigoDePedido
 {
     /**
-     * Sortea un código para un pedido con esa fecha prevista.
+     * Sortea tres bytes con el generador seguro del sistema y les añade el
+     * año de la fecha prevista. No comprueba si el código ya existe: eso lo
+     * resuelve el índice único al guardar.
      *
      * @param  CarbonInterface  $fechaPrevista  día de recogida previsto; da el año
-     * @return string
+     * @return string ocho caracteres, como 7B3E0A26
+     *
+     * @throws RandomException si el sistema no tiene una fuente de aleatoriedad segura
      */
     public function nuevo(CarbonInterface $fechaPrevista): string
     {
