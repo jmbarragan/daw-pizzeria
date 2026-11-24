@@ -132,6 +132,8 @@ class ReglasDeLaBaseDeDatosTest extends TestCase
      * @param  string  $sentencia  SQL que debe fallar
      * @param  string  $motivo  fragmento esperado en el mensaje de error
      * @return void
+     *
+     * @throws QueryException siempre, con el nombre de la regla en el mensaje: es lo que se espera
      */
     #[DataProvider('operacionesProhibidas')]
     public function test_la_base_de_datos_rechaza(string $sentencia, string $motivo): void
@@ -278,6 +280,8 @@ class ReglasDeLaBaseDeDatosTest extends TestCase
      * ventas; la Focaccia, no.
      *
      * @return void
+     *
+     * @throws QueryException si alguna inserción incumple una regla de la base de datos; la prueba fallaría antes de empezar
      */
     private function prepararDatos(): void
     {

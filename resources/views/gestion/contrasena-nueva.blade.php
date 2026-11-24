@@ -1,5 +1,9 @@
-{{-- Contraseña nueva, a la que se llega desde el enlace del correo. --}}
+{{-- Pantalla de la contraseña nueva del personal; se llega a ella desde el enlace del correo. --}}
 <x-plantilla.gestion titulo="Elegir una contraseña nueva" :con-menu="false">
+    <x-gestion.ayuda>
+        <p class="mb-0">Elige una contraseña de al menos 10 caracteres, con letras y números, y escríbela dos veces. Si el
+            enlace ha caducado, pide otro desde «¿Has olvidado la contraseña?».</p>
+    </x-gestion.ayuda>
     <form method="POST" action="{{ route('gestion.contrasena.guardar') }}" novalidate>
         @csrf
         <input type="hidden" name="token" value="{{ $token }}">

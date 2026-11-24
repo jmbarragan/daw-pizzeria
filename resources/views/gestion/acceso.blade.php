@@ -1,5 +1,11 @@
 {{-- Inicio de sesión del personal (G-01). El error es el mismo falle el correo o la contraseña. --}}
 <x-plantilla.gestion titulo="Inicio de sesión" :con-menu="false">
+    <x-gestion.ayuda>
+        <p>Entra con el correo y la contraseña de tu cuenta del personal. Si te acaban de dar de alta, elige antes tu
+            contraseña con el enlace que te ha llegado por correo.</p>
+        <p class="mb-0">Tras diez intentos fallidos desde la misma conexión, el acceso se bloquea 24 horas; un administrador
+            puede levantarlo antes desde «Ajustes».</p>
+    </x-gestion.ayuda>
     @if (session('estado'))
         <div class="alert alert-success" role="status">{{ session('estado') }}</div>
     @endif

@@ -19,6 +19,8 @@
     if ($usuario?->esAdministrador()) {
         $opciones += ['usuarios' => 'Usuarios', 'ajustes' => 'Ajustes'];
     }
+    // la ayuda va la última, para todos los perfiles (RF-09)
+    $opciones['ayuda'] = 'Ayuda';
 @endphp
 
 <!DOCTYPE html>

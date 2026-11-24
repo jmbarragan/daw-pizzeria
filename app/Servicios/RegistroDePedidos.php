@@ -55,16 +55,21 @@ class RegistroDePedidos
      * @param  string|null  $observaciones  notas del cliente
      * @param  CarbonInterface  $fechaPrevista  día de recogida previsto
      * @param  array<string, mixed>  $estado  columnas del estado; por defecto, pendiente por la web
+     * @param  Cliente|null  $cuenta  cliente con la sesión iniciada; el pedido es suyo y no de un invitado nuevo
      * @return Pedido
      *
      * @throws UniqueConstraintViolationException si el código se repite en todos los intentos
      */
     public function registrar(array $cliente, Collection $lineas, ?string $observaciones, CarbonInterface $fechaPrevista,
-        array $estado = ['canal' => 'web', 'estado' => 'pendiente']): Pedido
+        array $estado = ['canal' => 'web', 'estado' => 'pendiente'], ?Cliente $cuenta = null): Pedido
     {
-        $pedido = DB::transaction(function () use ($cliente, $lineas, $observaciones, $fechaPrevista, $estado) {
-            $nuevo = Cliente::create($cliente);
-            $pedido = $this->insertarPedido($nuevo, $observaciones, $fechaPrevista, $estado);
+        $pedido = DB::transaction(function () use ($cliente, $lineas, $observaciones, $fechaPrevista, $estado, $cuenta) {
+            if ($cuenta) {
+                // el nombre y el teléfono pueden cambiar de un pedido a otro; el correo es el de la cuenta
+                $cuenta->update(['nombre' => $cliente['nombre'], 'telefono' => $cliente['telefono']]);
+            }
+            $titular = $cuenta ?? Cliente::create($cliente);
+            $pedido = $this->insertarPedido($titular, $observaciones, $fechaPrevista, $estado);
 
             DB::table('lineas_pedido')->insert($lineas->map(fn (array $linea) => [
                 'pedido_id' => $pedido->id,

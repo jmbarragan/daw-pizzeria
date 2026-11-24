@@ -1,20 +1,24 @@
 <?php
 
 /**
- * Paginación con Bootstrap y límites de peticiones del acceso del personal y del envío de pedidos.
+ * Paginación con Bootstrap, servidor de correo de los ajustes y límites de peticiones del acceso y de los pedidos.
  */
 
 namespace App\Providers;
 
 use App\Http\Controllers\PedidoController;
+use App\Servicios\CorreoSaliente;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
+use Illuminate\Notifications\Events\NotificationSending;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 
 /**
- * Registra el aspecto de la paginación y los límites de peticiones de la aplicación.
+ * Registra el aspecto de la paginación, el servidor de correo de los ajustes y
+ * los límites de peticiones de la aplicación.
  */
 class AppServiceProvider extends ServiceProvider
 {
@@ -29,17 +33,26 @@ class AppServiceProvider extends ServiceProvider
     }
 
     /**
-     * Paginación con el aspecto de Bootstrap, para los listados de 15 filas
-     * (RNF-03), y límite «acceso»: cinco envíos
-     * por minuto y por IP entre los formularios
-     * de acceso y de contraseña (RNF-01, CU-08 3b). El sexto vuelve al
-     * formulario con un aviso, sin llegar a comprobar las credenciales.
+     * Arranque de la aplicación:
+     *
+     * - paginación con el aspecto de Bootstrap, para los listados de 15 filas (RNF-03);
+     * - antes de cada correo, el servidor de los ajustes, si está completo (CorreoSaliente, decisión 032);
+     * - límite «acceso»: cinco envíos por minuto y por IP entre los formularios de acceso y de
+     *   contraseña (RNF-01, CU-08 3b); el sexto vuelve con un aviso, sin comprobar las credenciales;
+     * - límite «pedidos»: cinco envíos de pedidos por minuto y por IP (decisión 031).
      *
      * @return void
      */
     public function boot(): void
     {
         Paginator::useBootstrapFive();
+
+        // cada correo sale por el servidor de los ajustes si están completos (decisión 032)
+        Event::listen(NotificationSending::class, function (NotificationSending $envio): void {
+            if ($envio->channel === 'mail') {
+                app(CorreoSaliente::class)->aplicar();
+            }
+        });
 
         RateLimiter::for('acceso', function (Request $peticion) {
             return Limit::perMinute(5)->by($peticion->ip())->response(function () {

@@ -6,6 +6,8 @@
 
 namespace App\Validacion;
 
+use Illuminate\Validation\Rules\Password;
+
 /**
  * Cada método devuelve las reglas de Laravel de un tipo de dato del diseño,
  * con los mismos límites que las columnas de la base de datos. Así un dato
@@ -89,5 +91,30 @@ final class ReglasDeDatos
     public static function nombre(int $maximo): array
     {
         return ['string', 'min:2', "max:{$maximo}"];
+    }
+
+    /**
+     * Contraseña de una cuenta, del personal o de un cliente: al menos 10
+     * caracteres, con alguna letra y algún número. Los símbolos se admiten,
+     * pero no se exigen.
+     *
+     * @return list<mixed>
+     */
+    public static function contrasena(): array
+    {
+        return ['string', Password::min(10)->letters()->numbers()];
+    }
+
+    /**
+     * Nombre del servidor de correo saliente, en minúsculas: etiquetas de
+     * letras, cifras y guiones separadas por puntos, como smtp.gmail.com o una
+     * IP. Sin protocolo, sin barras y con al menos un punto, así que no vale
+     * «https://…» ni un nombre suelto como «localhost».
+     *
+     * @return list<string>
+     */
+    public static function servidorDeCorreo(): array
+    {
+        return ['string', 'max:255', 'regex:/^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+$/'];
     }
 }

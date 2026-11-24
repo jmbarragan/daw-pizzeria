@@ -7,6 +7,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PedidoRequest;
+use App\Models\Cliente;
 use App\Models\Pedido;
 use App\Models\Producto;
 use App\Servicios\AjustesPublicos;
@@ -80,6 +81,8 @@ class PedidoController extends Controller
             'abierto' => $this->calendario->turnoAbierto(),
             'siguiente' => $this->calendario->siguienteApertura(),
             'telefono' => $ajustes->valor('telefono_local'),
+            // con la sesión iniciada, el formulario sale con los datos de la cuenta
+            'cuenta' => $peticion->user('cliente'),
         ]);
     }
 
@@ -113,7 +116,8 @@ class PedidoController extends Controller
         }
 
         $pedido = $registro->registrar(
-            $peticion->cliente(), $lineas, $peticion->observaciones(), $this->calendario->fechaPrevista()
+            $peticion->cliente(), $lineas, $peticion->observaciones(), $this->calendario->fechaPrevista(),
+            cuenta: $peticion->user('cliente'),
         );
         RateLimiter::hit($cupo, 3600);
 
@@ -137,7 +141,19 @@ class PedidoController extends Controller
             return redirect()->route('carta');
         }
 
-        return view('pedido-recibido', ['pedido' => $pedido, 'enlace' => $enlaces->direccion($pedido)]);
+        // el registro solo se ofrece a un invitado cuyo correo aún no tiene cuenta (CU-07)
+        $cliente = $pedido->cliente;
+        $conCuenta = Cliente::where('email', $cliente->email)->whereNotNull('contrasena')->exists();
+
+        return view('pedido-recibido', [
+            'pedido' => $pedido,
+            'enlace' => $enlaces->direccion($pedido),
+            'registro' => match (true) {
+                $peticion->user('cliente') !== null, ! $cliente->esInvitado() => 'en-la-cuenta',
+                $conCuenta => 'ya-hay-cuenta',
+                default => 'ofrecer',
+            },
+        ]);
     }
 
     /**

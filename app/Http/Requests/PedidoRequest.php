@@ -38,7 +38,8 @@ class PedidoRequest extends FormRequest
         $this->merge([
             'nombre' => trim((string) $this->input('nombre')),
             'telefono' => Telefono::normalizar((string) $this->input('telefono')),
-            'email' => trim((string) $this->input('email')),
+            // con la sesión iniciada el correo es siempre el de la cuenta, aunque se cambie en el formulario
+            'email' => $this->user('cliente')->email ?? trim((string) $this->input('email')),
             'observaciones' => trim((string) $this->input('observaciones')),
         ]);
     }

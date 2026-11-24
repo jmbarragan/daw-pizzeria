@@ -6,8 +6,8 @@
 
 namespace App\Http\Requests\Gestion;
 
+use App\Validacion\ReglasDeDatos;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rules\Password;
 
 /**
  * Pide la contraseña dos veces, con al menos diez caracteres, letras y números.
@@ -35,7 +35,7 @@ class NuevaContrasenaRequest extends FormRequest
         return [
             'token' => ['required', 'string'],
             'email' => ['required', 'email'],
-            'contrasena' => ['required', 'confirmed', Password::min(10)->letters()->numbers()],
+            'contrasena' => ['required', 'confirmed', ...ReglasDeDatos::contrasena()],
         ];
     }
 

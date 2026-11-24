@@ -137,6 +137,41 @@ class ReglasDeDatosTest extends TestCase
     }
 
     /**
+     * Contraseñas de 10 caracteres o más con letras y números frente a las cortas o de un solo tipo.
+     *
+     * @return array<string, array{0: string, 1: bool}>
+     */
+    public static function contrasenas(): array
+    {
+        return [
+            'diez con letras y números' => ['Pizza12345', true],
+            'con símbolos y eñe' => ['Horno.de.leña.2026', true],
+            'nueve caracteres' => ['Pizza1234', false],
+            'solo letras' => ['Margheritas', false],
+            'solo números' => ['1234567890', false],
+        ];
+    }
+
+    /**
+     * Servidores con dominio o una IP frente a los que llevan protocolo, barras, dos puntos seguidos, mayúsculas o son un nombre suelto.
+     *
+     * @return array<string, array{0: string, 1: bool}>
+     */
+    public static function servidores(): array
+    {
+        return [
+            'servidor con dominio' => ['smtp.gmail.com', true],
+            'dirección IP' => ['127.0.0.1', true],
+            'con guion' => ['correo-saliente.focaccia.example', true],
+            'con protocolo' => ['https://smtp.gmail.com', false],
+            'con barra final' => ['smtp.gmail.com/', false],
+            'dos puntos seguidos' => ['smtp..gmail.com', false],
+            'nombre suelto' => ['localhost', false],
+            'en mayúsculas sin pasar a minúsculas' => ['SMTP.Gmail.com', false],
+        ];
+    }
+
+    /**
      * Pasa un valor por el validador de Laravel con unas reglas.
      *
      * @param  mixed  $valor  dato que se valida
@@ -149,7 +184,7 @@ class ReglasDeDatosTest extends TestCase
     }
 
     /**
-     * La regla de correo acepta o rechaza cada caso de correos().
+     * Un correo necesita usuario, arroba y dominio, sin espacios, comentarios ni comillas, y cabe en 254 caracteres.
      *
      * @param  string  $entrada  correo probado
      * @param  bool  $esperado  si debe aceptarse
@@ -162,7 +197,7 @@ class ReglasDeDatosTest extends TestCase
     }
 
     /**
-     * La regla de teléfono acepta o rechaza cada caso de telefonos().
+     * Un teléfono va en E.164: con «+», un primer dígito distinto de 0 y 15 cifras como mucho.
      *
      * @param  string  $entrada  teléfono probado
      * @param  bool  $esperado  si debe aceptarse
@@ -175,7 +210,7 @@ class ReglasDeDatosTest extends TestCase
     }
 
     /**
-     * La regla de precio acepta o rechaza cada caso de precios().
+     * Un precio es positivo, con dos decimales como mucho y sin pasar de 999,99.
      *
      * @param  string|int|float  $entrada  precio probado
      * @param  bool  $esperado  si debe aceptarse
@@ -188,7 +223,7 @@ class ReglasDeDatosTest extends TestCase
     }
 
     /**
-     * La regla del código de pedido acepta o rechaza cada caso de codigos().
+     * El código del pedido son seis hexadecimales en mayúsculas y las dos cifras del año.
      *
      * @param  string  $entrada  código probado
      * @param  bool  $esperado  si debe aceptarse
@@ -201,7 +236,7 @@ class ReglasDeDatosTest extends TestCase
     }
 
     /**
-     * La regla de hora acepta o rechaza cada caso de horas().
+     * Una hora va en HH:MM de 00:00 a 23:59.
      *
      * @param  string  $entrada  hora probada
      * @param  bool  $esperado  si debe aceptarse
@@ -214,8 +249,7 @@ class ReglasDeDatosTest extends TestCase
     }
 
     /**
-     * La regla de nombre con 40 caracteres de máximo acepta o rechaza cada
-     * caso de nombres().
+     * Un nombre tiene al menos 2 caracteres y no pasa del máximo que se pide, aquí 40; las tildes cuentan como una letra.
      *
      * @param  string  $entrada  nombre probado
      * @param  bool  $esperado  si debe aceptarse
@@ -225,5 +259,31 @@ class ReglasDeDatosTest extends TestCase
     public function test_nombre(string $entrada, bool $esperado): void
     {
         $this->assertSame($esperado, $this->acepta($entrada, ReglasDeDatos::nombre(40)));
+    }
+
+    /**
+     * Una contraseña tiene al menos 10 caracteres y mezcla letras y números.
+     *
+     * @param  string  $entrada  contraseña probada
+     * @param  bool  $esperado  si debe aceptarse
+     * @return void
+     */
+    #[DataProvider('contrasenas')]
+    public function test_contrasena(string $entrada, bool $esperado): void
+    {
+        $this->assertSame($esperado, $this->acepta($entrada, ReglasDeDatos::contrasena()));
+    }
+
+    /**
+     * El servidor de correo son etiquetas separadas por puntos (un dominio o una IP), en minúsculas y sin protocolo.
+     *
+     * @param  string  $entrada  servidor probado
+     * @param  bool  $esperado  si debe aceptarse
+     * @return void
+     */
+    #[DataProvider('servidores')]
+    public function test_servidor_de_correo(string $entrada, bool $esperado): void
+    {
+        $this->assertSame($esperado, $this->acepta($entrada, ReglasDeDatos::servidorDeCorreo()));
     }
 }

@@ -6,6 +6,10 @@
 
 namespace App\Models;
 
+use App\Notifications\RecuperarContrasenaDeCliente;
+use App\Notifications\VerificarCorreoDeCliente;
+use Closure;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -101,5 +105,41 @@ class Cliente extends Authenticatable
     public function esInvitado(): bool
     {
         return $this->contrasena === null;
+    }
+
+    /**
+     * Condición para buscar solo cuentas que pueden entrar: con contraseña, el
+     * correo verificado y sin anonimizar. Como varios invitados pueden
+     * compartir correo (decisión 031), el acceso y la recuperación la añaden a
+     * sus credenciales para no dar nunca con un invitado.
+     *
+     * @return Closure(Builder<Cliente>): void
+     */
+    public static function soloCuentasActivas(): Closure
+    {
+        return function (Builder $consulta): void {
+            $consulta->whereNotNull('contrasena')->whereNotNull('email_verificado_en')->whereNull('anonimizado_en');
+        };
+    }
+
+    /**
+     * Manda el correo para verificar la dirección.
+     *
+     * @return void
+     */
+    public function enviarVerificacion(): void
+    {
+        $this->notify(new VerificarCorreoDeCliente);
+    }
+
+    /**
+     * Envía el correo de recuperación propio de los clientes, en español.
+     *
+     * @param  string  $token  token del enlace
+     * @return void
+     */
+    public function sendPasswordResetNotification($token): void
+    {
+        $this->notify(new RecuperarContrasenaDeCliente($token));
     }
 }

@@ -7,14 +7,21 @@
 
 use App\Http\Controllers\CartaController;
 use App\Http\Controllers\CestaController;
+use App\Http\Controllers\ContrasenaDeClienteController;
+use App\Http\Controllers\CuentaController;
 use App\Http\Controllers\Gestion\AccesoController;
+use App\Http\Controllers\Gestion\AjusteController;
 use App\Http\Controllers\Gestion\AlergenoController;
 use App\Http\Controllers\Gestion\CategoriaController;
+use App\Http\Controllers\Gestion\ClienteController;
 use App\Http\Controllers\Gestion\ContrasenaController;
 use App\Http\Controllers\Gestion\HorarioController;
+use App\Http\Controllers\Gestion\InformeController;
 use App\Http\Controllers\Gestion\PedidoController as GestionDePedidos;
 use App\Http\Controllers\Gestion\ProductoController;
+use App\Http\Controllers\Gestion\UsuarioController;
 use App\Http\Controllers\InicioController;
+use App\Http\Controllers\MisPedidosController;
 use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\SeguimientoController;
 use Illuminate\Support\Facades\Route;
@@ -22,6 +29,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [InicioController::class, 'mostrar'])->name('inicio');
 Route::get('carta', [CartaController::class, 'mostrar'])->name('carta');
 Route::view('privacidad', 'privacidad')->name('privacidad');
+Route::view('ayuda', 'ayuda')->name('ayuda');
 
 Route::controller(PedidoController::class)->prefix('pedido')->name('pedido')->group(function () {
     Route::get('/', 'formulario')->name('');
@@ -34,6 +42,30 @@ Route::controller(SeguimientoController::class)->prefix('seguimiento/{token}')->
     Route::get('cancelar', 'confirmarCancelacion')->name('.cancelacion');
     Route::post('cancelar', 'cancelar')->name('.cancelar');
 });
+
+// cuenta del cliente: registro tras el pedido, verificación, acceso e historial (RF-08)
+Route::post('pedido/recibido/cuenta', [CuentaController::class, 'registrar'])->name('cuenta.registrar');
+Route::get('cuenta/verificar/{cliente}/{hash}', [CuentaController::class, 'verificar'])
+    ->middleware('signed:relative')->name('cuenta.verificar');
+
+Route::middleware(['guest:cliente', 'ip.bloqueada'])->group(function () {
+    Route::get('acceder', [CuentaController::class, 'mostrarAcceso'])->name('acceder');
+    Route::post('acceder', [CuentaController::class, 'entrar'])->middleware('throttle:acceso')->name('entrar');
+
+    Route::controller(ContrasenaDeClienteController::class)->prefix('contrasena')->name('contrasena')->group(function () {
+        Route::get('/', 'olvidada')->name('.olvidada');
+        Route::post('/', 'enviarEnlace')->middleware('throttle:acceso')->name('.enlace');
+        Route::get('{token}', 'nueva')->name('.nueva');
+        Route::post('nueva', 'guardar')->middleware('throttle:acceso')->name('.guardar');
+    });
+});
+
+Route::middleware(['auth:cliente', 'cuenta.cliente'])->group(function () {
+    Route::get('mis-pedidos', [MisPedidosController::class, 'listado'])->name('mis-pedidos');
+    Route::post('mis-pedidos/{pedido:codigo}/repetir', [MisPedidosController::class, 'repetir'])->name('mis-pedidos.repetir');
+    Route::post('salir', [CuentaController::class, 'salir'])->name('salir');
+});
+
 Route::controller(CestaController::class)->prefix('cesta')->name('cesta')->group(function () {
     Route::get('/', 'mostrar')->name('');
     Route::post('/', 'anadir')->name('.anadir');
@@ -58,6 +90,8 @@ Route::prefix('gestion')->name('gestion.')->middleware('conexion.gestion')->grou
 
     Route::middleware(['auth:personal', 'cuenta.activa'])->group(function () {
         Route::post('salir', [AccesoController::class, 'salir'])->name('salir');
+        // ayuda de la gestión por perfiles, para empleado y administrador (RF-09)
+        Route::view('ayuda', 'gestion.ayuda')->name('ayuda');
         Route::prefix('pedidos')->name('pedidos')->controller(GestionDePedidos::class)->group(function () {
             Route::get('/', 'panel')->name('');
             Route::get('telefonico', 'telefonico')->name('.telefonico');
@@ -67,6 +101,20 @@ Route::prefix('gestion')->name('gestion.')->middleware('conexion.gestion')->grou
             Route::post('{pedido:codigo}/rechazar', 'rechazar')->name('.rechazar');
             Route::post('{pedido:codigo}/estado', 'avanzar')->name('.avanzar');
         });
+
+        // clientes, con anonimización de los que tienen pedidos (RF-18)
+        Route::prefix('clientes')->name('clientes')->controller(ClienteController::class)->group(function () {
+            Route::get('/', 'listado')->name('');
+            Route::get('nuevo', 'nuevo')->name('.nuevo');
+            Route::post('/', 'guardar')->name('.guardar');
+            Route::get('{cliente}/editar', 'editar')->name('.editar');
+            Route::put('{cliente}', 'actualizar')->name('.actualizar');
+            Route::delete('{cliente}', 'borrar')->name('.borrar');
+        });
+
+        // informes por intervalo de fechas, con la conexión de solo lectura (RF-20)
+        Route::get('informes', [InformeController::class, 'mostrar'])->name('informes');
+        Route::get('informes/pdf', [InformeController::class, 'pdf'])->name('informes.pdf');
 
         // horario de apertura por fechas (RF-19)
         Route::prefix('horario')->name('horario')->controller(HorarioController::class)->group(function () {
@@ -111,7 +159,23 @@ Route::prefix('gestion')->name('gestion.')->middleware('conexion.gestion')->grou
         });
 
         Route::middleware('rol:administrador')->group(function () {
-            Route::view('usuarios', 'gestion.usuarios')->name('usuarios');
+            // usuarios del personal, con al menos un administrador activo (RF-21)
+            Route::prefix('usuarios')->name('usuarios')->controller(UsuarioController::class)->group(function () {
+                Route::get('/', 'listado')->name('');
+                Route::get('nuevo', 'nuevo')->name('.nuevo');
+                Route::post('/', 'guardar')->name('.guardar');
+                Route::get('{usuario}/editar', 'editar')->name('.editar');
+                Route::put('{usuario}', 'actualizar')->name('.actualizar');
+                Route::patch('{usuario}/desactivar', 'desactivar')->name('.desactivar');
+                Route::patch('{usuario}/activar', 'activar')->name('.activar');
+            });
+
+            // ajustes del local, servidor de correo y bloqueos de IP (RF-21)
+            Route::prefix('ajustes')->name('ajustes')->controller(AjusteController::class)->group(function () {
+                Route::get('/', 'mostrar')->name('');
+                Route::put('/', 'guardar')->name('.guardar');
+                Route::patch('bloqueos/{bloqueo}/desbloquear', 'desbloquear')->name('.desbloquear');
+            });
         });
     });
 });

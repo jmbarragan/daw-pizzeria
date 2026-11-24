@@ -64,6 +64,24 @@ return [
             'engine' => 'InnoDB',
         ],
 
+        // informes (RF-20): focaccia_informes, de solo lectura; rol_consulta no le deja leer las
+        // contraseñas, los tokens ni la tabla de ajustes (decisión 032)
+        'informes' => [
+            'driver' => 'mysql',
+            'host' => env('DB_HOST', '127.0.0.1'),
+            'port' => env('DB_PORT', '3306'),
+            'database' => env('DB_DATABASE', 'focaccia_trevi'),
+            'username' => env('DB_INFORMES_USUARIO', 'focaccia_informes'),
+            'password' => env('DB_INFORMES_CONTRASENA', ''),
+            'unix_socket' => env('DB_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_spanish_ci',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => 'InnoDB',
+        ],
+
         'gestion' => [
             'driver' => 'mysql',
             'host' => env('DB_HOST', '127.0.0.1'),
