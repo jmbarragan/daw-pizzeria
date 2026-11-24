@@ -280,6 +280,8 @@ class ReglasDeLaBaseDeDatosTest extends TestCase
      * ventas; la Focaccia, no.
      *
      * @return void
+     *
+     * @throws QueryException si alguna inserción incumple una regla de la base de datos; la prueba fallaría antes de empezar
      */
     private function prepararDatos(): void
     {
