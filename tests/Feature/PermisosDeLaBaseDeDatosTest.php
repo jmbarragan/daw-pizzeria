@@ -58,6 +58,8 @@ class PermisosDeLaBaseDeDatosTest extends TestCase
             'web lee los ajustes públicos' => ['web', 'SELECT COUNT(*) FROM v_ajustes_publicos'],
             'web registra un bloqueo de IP' => ['web', "INSERT INTO bloqueos_ip (ip) VALUES ('192.0.2.10')"],
             'web guarda una sesión' => ['web', "INSERT INTO sessions (id, payload, last_activity) VALUES ('prueba', '', 0)"],
+            'informes lee los totales' => ['informes', 'SELECT COUNT(*) FROM v_pedidos_totales'],
+            'web guarda un enlace de recuperación de cliente' => ['web', "INSERT INTO recuperacion_clientes (email, token) VALUES ('a@correo.example', 'x')"],
         ];
     }
 
@@ -81,13 +83,16 @@ class PermisosDeLaBaseDeDatosTest extends TestCase
             'web no lee el personal' => ['web', 'SELECT * FROM usuarios'],
             'web no borra pedidos' => ['web', 'DELETE FROM pedidos WHERE id = 1'],
             'web no toca los enlaces de recuperación' => ['web', 'SELECT * FROM password_reset_tokens'],
+            'informes no cambia pedidos' => ['informes', "UPDATE pedidos SET estado = 'cancelado' WHERE id = 1"],
+            'informes no lee las contraseñas' => ['informes', 'SELECT contrasena FROM usuarios'],
+            'web no cambia un enlace de recuperación de cliente' => ['web', "UPDATE recuperacion_clientes SET token = 'y'"],
         ];
     }
 
     /**
      * La conexión puede ejecutar la operación: si falla, no es por permisos.
      *
-     * @param  string  $conexion  web o gestion
+     * @param  string  $conexion  web, gestion o informes
      * @param  string  $sentencia  SQL que debe estar permitido
      * @return void
      */
@@ -102,7 +107,7 @@ class PermisosDeLaBaseDeDatosTest extends TestCase
     /**
      * La conexión no puede ejecutar la operación: MySQL la deniega por permisos.
      *
-     * @param  string  $conexion  web o gestion
+     * @param  string  $conexion  web, gestion o informes
      * @param  string  $sentencia  SQL que debe estar prohibido
      * @return void
      */

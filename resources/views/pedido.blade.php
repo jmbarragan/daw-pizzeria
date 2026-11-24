@@ -12,7 +12,7 @@
                 <div class="mb-3">
                     <label for="nombre" class="form-label">Nombre</label>
                     <input type="text" id="nombre" name="nombre" maxlength="80" required autocomplete="name"
-                           value="{{ old('nombre') }}" @class(['form-control', 'is-invalid' => $errors->has('nombre')])>
+                           value="{{ old('nombre', $cuenta?->nombre) }}" @class(['form-control', 'is-invalid' => $errors->has('nombre')])>
                     @error('nombre')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -21,7 +21,7 @@
                 <div class="mb-3">
                     <label for="telefono" class="form-label">Teléfono</label>
                     <input type="tel" id="telefono" name="telefono" required autocomplete="tel" inputmode="tel"
-                           aria-describedby="ayuda-telefono" value="{{ old('telefono') }}"
+                           aria-describedby="ayuda-telefono" value="{{ old('telefono', $cuenta?->telefono) }}"
                            @class(['form-control', 'is-invalid' => $errors->has('telefono')])>
                     <div id="ayuda-telefono" class="form-text">Te llamamos solo si hay algún problema con el pedido.</div>
                     @error('telefono')
@@ -32,9 +32,11 @@
                 <div class="mb-3">
                     <label for="email" class="form-label">Correo electrónico</label>
                     <input type="email" id="email" name="email" maxlength="254" required autocomplete="email"
-                           aria-describedby="ayuda-email" value="{{ old('email') }}"
+                           aria-describedby="ayuda-email" value="{{ $cuenta ? $cuenta->email : old('email') }}" @readonly($cuenta)
                            @class(['form-control', 'is-invalid' => $errors->has('email')])>
-                    <div id="ayuda-email" class="form-text">Te enviaremos el enlace para seguir el pedido y la hora de recogida.</div>
+                    <div id="ayuda-email" class="form-text">
+                        {{ $cuenta ? 'Es el correo de tu cuenta; el pedido saldrá en «Mis pedidos».' : 'Te enviaremos el enlace para seguir el pedido y la hora de recogida.' }}
+                    </div>
                     @error('email')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror

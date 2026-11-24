@@ -37,7 +37,18 @@
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link" href="{{ url('/carta') }}">Carta</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ url('/ayuda') }}">Ayuda</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ url('/acceder') }}">Acceder</a></li>
+                    {{-- las páginas de error sin sesión no saben si hay alguien dentro --}}
+                    @if ($conCesta && auth('cliente')->check())
+                        <li class="nav-item"><a class="nav-link" href="{{ route('mis-pedidos') }}">Mis pedidos</a></li>
+                        <li class="nav-item">
+                            <form method="POST" action="{{ route('salir') }}">
+                                @csrf
+                                <button type="submit" class="nav-link btn btn-link">Salir</button>
+                            </form>
+                        </li>
+                    @else
+                        <li class="nav-item"><a class="nav-link" href="{{ route('acceder') }}">Acceder</a></li>
+                    @endif
                     @if ($conCesta)
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('/cesta') }}">Cesta ({{ $productosEnCesta }})</a>

@@ -1,5 +1,10 @@
 {{-- Petición del enlace para cambiar la contraseña (CU-08, 2a). --}}
 <x-plantilla.gestion titulo="Recuperar la contraseña" :con-menu="false">
+    <x-gestion.ayuda>
+        <p class="mb-0">El enlace sirve una hora y una sola vez. Por seguridad, la respuesta es la misma aunque el correo no
+            sea de nadie: si no te llega en unos minutos, mira en el correo no deseado o pide a un administrador que revise
+            tu cuenta.</p>
+    </x-gestion.ayuda>
     @if (session('estado'))
         <div class="alert alert-success" role="status">{{ session('estado') }}</div>
     @endif

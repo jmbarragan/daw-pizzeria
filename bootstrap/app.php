@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\ExigirCuentaActiva;
+use App\Http\Middleware\ExigirCuentaDeCliente;
 use App\Http\Middleware\ExigirRol;
 use App\Http\Middleware\RechazarIpBloqueada;
 use App\Http\Middleware\UsarConexionDeGestion;
@@ -21,6 +22,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'conexion.gestion' => UsarConexionDeGestion::class,
             'cuenta.activa' => ExigirCuentaActiva::class,
+            'cuenta.cliente' => ExigirCuentaDeCliente::class,
             'ip.bloqueada' => RechazarIpBloqueada::class,
             'rol' => ExigirRol::class,
         ]);
@@ -33,9 +35,11 @@ return Application::configure(basePath: dirname(__DIR__))
         // una IP bloqueada ve su aviso aunque ya haya agotado el límite por minuto
         $middleware->prependToPriorityList(ThrottleRequests::class, RechazarIpBloqueada::class);
 
-        // la zona de clientes cambiará el destino de los invitados cuando exista
-        $middleware->redirectGuestsTo(fn () => route('gestion.acceso'));
-        $middleware->redirectUsersTo(fn () => route('gestion.pedidos'));
+        // cada zona manda a su propio acceso o a su propia página de inicio
+        $middleware->redirectGuestsTo(fn (Request $peticion) => $peticion->is('gestion', 'gestion/*')
+            ? route('gestion.acceso') : route('acceder'));
+        $middleware->redirectUsersTo(fn (Request $peticion) => $peticion->is('gestion', 'gestion/*')
+            ? route('gestion.pedidos') : route('mis-pedidos'));
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(

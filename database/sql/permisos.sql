@@ -34,6 +34,7 @@ GRANT UPDATE (estado, cerrado_en) ON `{bd}`.pedidos TO 'rol_cliente_web';
 GRANT SELECT, INSERT ON `{bd}`.lineas_pedido TO 'rol_cliente_web';
 GRANT SELECT, INSERT ON `{bd}`.bloqueos_ip TO 'rol_cliente_web';
 GRANT SELECT ON `{bd}`.v_pedidos_totales   TO 'rol_cliente_web';
+GRANT SELECT, INSERT, DELETE ON `{bd}`.recuperacion_clientes TO 'rol_cliente_web';
 
 -- sesiones, caché y colas
 GRANT SELECT, INSERT, UPDATE, DELETE ON `{bd}`.sessions     TO 'rol_empleado', 'rol_cliente_web';

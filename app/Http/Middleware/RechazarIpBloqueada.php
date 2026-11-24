@@ -36,7 +36,9 @@ class RechazarIpBloqueada
         $bloqueo = $this->control->bloqueoVigente($peticion->ip());
 
         if ($bloqueo !== null) {
-            return response()->view('gestion.ip-bloqueada', ['bloqueo' => $bloqueo], 403);
+            $vista = $peticion->is('gestion', 'gestion/*') ? 'gestion.ip-bloqueada' : 'ip-bloqueada';
+
+            return response()->view($vista, ['bloqueo' => $bloqueo], 403);
         }
 
         return $siguiente($peticion);

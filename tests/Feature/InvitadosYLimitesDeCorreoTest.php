@@ -81,6 +81,8 @@ class InvitadosYLimitesDeCorreoTest extends TestCase
      * Entre clientes con cuenta el correo sigue siendo único; un invitado sí puede usar el de una cuenta.
      *
      * @return void
+     *
+     * @throws UniqueConstraintViolationException en la segunda cuenta con el mismo correo, que es lo que se espera
      */
     public function test_dos_cuentas_no_comparten_correo(): void
     {
