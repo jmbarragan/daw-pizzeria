@@ -31,7 +31,7 @@ use Illuminate\View\View;
 class PedidoController extends Controller
 {
     /**
-     * Pedidos guardados que admite un mismo correo en una hora (decisión 031).
+     * Pedidos guardados que admite un mismo correo en una hora.
      *
      * @var int
      */
@@ -45,15 +45,30 @@ class PedidoController extends Controller
     const AVISO_DE_LIMITE = 'Has enviado varios pedidos seguidos. Espera un poco o llámanos para hacer el pedido.';
 
     /**
+     * Contenido y reglas de la cesta.
+     *
+     * @var Cesta
+     */
+    private readonly Cesta $cesta;
+
+    /**
+     * Fecha prevista y aviso de abierto o cerrado.
+     *
+     * @var Calendario
+     */
+    private readonly Calendario $calendario;
+
+    /**
      * Prepara el controlador con la cesta y el calendario.
      *
      * @param  Cesta  $cesta  contenido y reglas de la cesta
      * @param  Calendario  $calendario  fecha prevista y aviso de abierto o cerrado
      */
-    public function __construct(
-        private readonly Cesta $cesta,
-        private readonly Calendario $calendario,
-    ) {}
+    public function __construct(Cesta $cesta, Calendario $calendario)
+    {
+        $this->cesta = $cesta;
+        $this->calendario = $calendario;
+    }
 
     /**
      * Formulario de datos con el resumen del pedido.

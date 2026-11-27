@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Schema;
 /**
  * Enlaces para que un cliente con cuenta elija otra contraseña (RF-08). Van en
  * una tabla propia y no en password_reset_tokens, la del personal, porque una
- * misma dirección puede ser de un empleado y de un cliente (decisión 032). La
+ * misma dirección puede ser de un empleado y de un cliente. La
  * usa la zona pública con focaccia_web.
  */
 return new class extends Migration

@@ -14,7 +14,7 @@ use InvalidArgumentException;
 
 /**
  * Lee con la conexión «informes», la de focaccia_informes, que solo puede
- * consultar (decisión 032). Las ventas cobradas y los productos más vendidos
+ * consultar. Las ventas cobradas y los productos más vendidos
  * cuentan los pedidos recogidos por el día de su pago; los pedidos por estado,
  * todos los que tienen su fecha prevista en el intervalo. Los importes salen
  * de v_pedidos_totales y de las líneas, con el precio del momento del pedido.

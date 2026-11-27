@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Servidor de correo saliente tomado de los ajustes del local (RF-21, decisión 032).
+ * Servidor de correo saliente tomado de los ajustes del local (RF-21).
  */
 
 namespace App\Servicios;

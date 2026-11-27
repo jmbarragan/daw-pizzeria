@@ -13,7 +13,7 @@ use Illuminate\Validation\Rule;
 
 /**
  * Nombre, correo de acceso y rol. La contraseña no está en el formulario: la
- * elige el propio empleado con el enlace del alta (decisión 032). El correo
+ * elige el propio empleado con el enlace del alta. El correo
  * no se puede repetir entre el personal (CU-20, 3a).
  */
 class UsuarioRequest extends FormRequest

@@ -1,0 +1,17 @@
+# Lo que no entra en la imagen: secretos, dependencias del equipo y ficheros que se generan.
+.env
+.env.*
+!.env.example
+.git
+node_modules
+vendor
+public/build
+public/hot
+bootstrap/cache/*.php
+storage/logs/*.log
+storage/framework/cache/data
+storage/framework/sessions/*
+storage/framework/views/*.php
+storage/framework/testing
+.phpunit.cache
+.phpunit.result.cache

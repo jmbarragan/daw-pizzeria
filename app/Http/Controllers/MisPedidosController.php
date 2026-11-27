@@ -12,10 +12,11 @@ use App\Servicios\Cesta;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
  * El historial empieza en el pedido con el que se registró el cliente: los
- * de invitado anteriores no se le asignan (decisión 032). Repetir copia las
+ * de invitado anteriores no se le asignan. Repetir copia las
  * líneas a la cesta con los precios de ahora; lo que ya no se puede pedir se
  * queda fuera y se dice qué.
  */
@@ -48,6 +49,8 @@ class MisPedidosController extends Controller
      * @param  Pedido  $pedido  pedido de la dirección, por su código
      * @param  Cesta  $cesta  cesta de la sesión
      * @return RedirectResponse
+     *
+     * @throws HttpException 404 si el pedido es de otro cliente
      */
     public function repetir(Request $peticion, Pedido $pedido, Cesta $cesta): RedirectResponse
     {

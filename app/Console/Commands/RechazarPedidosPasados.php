@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Orden que rechaza los pedidos pendientes que ya no se pueden recoger (decisión 030).
+ * Orden que rechaza los pedidos pendientes que ya no se pueden recoger.
  */
 
 namespace App\Console\Commands;

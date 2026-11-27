@@ -14,7 +14,7 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
 /**
- * Cada correo es un trabajo de la cola en base de datos (decisión 029): si el
+ * Cada correo es un trabajo de la cola en base de datos: si el
  * servidor de correo no responde, el pedido ya está guardado y el envío se
  * intenta 3 veces: enseguida, al minuto y a los cinco minutos. Lo que no
  * salga queda en failed_jobs. Se encola solo cuando se confirma la transacción, así
@@ -91,7 +91,7 @@ abstract class AvisoDePedido extends Notification implements ShouldQueue
 
     /**
      * Escapa los caracteres de Markdown de un texto que escribe el cliente, para
-     * que salga tal cual y no como enlace, imagen o formato (decisión 031).
+     * que salga tal cual y no como enlace, imagen o formato.
      *
      * @param  string  $texto  texto del cliente, por ejemplo su nombre
      * @return string

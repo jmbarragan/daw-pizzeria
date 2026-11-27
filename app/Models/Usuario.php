@@ -127,7 +127,7 @@ class Usuario extends Authenticatable
 
     /**
      * Cuenta en cuyo nombre se rechazan solos los pedidos pendientes que se
-     * han pasado (decisión 030): la base de datos exige que alguien del
+     * han pasado: la base de datos exige que alguien del
      * personal figure como quien decide. Está desactivada y su contraseña es
      * aleatoria, así que nadie puede entrar con ella. Se crea la primera vez.
      *

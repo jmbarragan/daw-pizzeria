@@ -21,7 +21,7 @@ use Tests\TestCase;
  * El martes 24/11/2026 a las 20:40, Lucía tiene cuenta y un pedido, el
  * 1A2B3C26, con una Margherita y una Tartufo que ya se ha retirado. Antes de
  * registrarse pidió como invitada con el mismo correo (el 4D5E6F26), que no
- * es de su historial (decisión 032).
+ * es de su historial.
  */
 class MisPedidosTest extends TestCase
 {

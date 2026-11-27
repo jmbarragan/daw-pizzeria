@@ -1,4 +1,6 @@
 * text=auto eol=lf
+# PowerShell 5.1 en Windows: saltos de línea de Windows (el fichero lleva BOM para que lea bien las tildes)
+*.ps1 text eol=crlf
 
 *.blade.php diff=html
 *.css diff=css

@@ -14,7 +14,7 @@ use Illuminate\Notifications\Notification;
 
 /**
  * En lugar de una contraseña inicial, lleva un enlace para que el empleado
- * elija la suya (decisión 032): nadie más llega a conocerla. Reutiliza el
+ * elija la suya: nadie más llega a conocerla. Reutiliza el
  * token y la pantalla de la recuperación, así que sirve 60 minutos; si caduca,
  * se pide otro desde «¿Has olvidado la contraseña?».
  */

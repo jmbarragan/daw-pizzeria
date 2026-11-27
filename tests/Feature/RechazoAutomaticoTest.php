@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Pruebas del rechazo automático de los pedidos pendientes que se han pasado (decisión 030).
+ * Pruebas del rechazo automático de los pedidos pendientes que se han pasado.
  */
 
 namespace Tests\Feature;

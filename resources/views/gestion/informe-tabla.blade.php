@@ -37,9 +37,9 @@
     </tbody>
     <tfoot>
         <tr>
-            <th scope="row">Total</th>
+            <td class="fw-bold">Total</td>
             @foreach ($numericas as $columna)
-                <th class="text-end">{{ $columna === 'importe' ? $euros($resultado['total'][$columna]) : $resultado['total'][$columna] }}</th>
+                <td class="text-end fw-bold">{{ $columna === 'importe' ? $euros($resultado['total'][$columna]) : $resultado['total'][$columna] }}</td>
             @endforeach
         </tr>
     </tfoot>

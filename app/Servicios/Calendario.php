@@ -55,7 +55,7 @@ class Calendario
     }
 
     /**
-     * Fecha prevista de un pedido hecho ahora (decisión 028): hoy si queda un
+     * Fecha prevista de un pedido hecho ahora: hoy si queda un
      * turno por terminar y, si no, el primer día con turno.
      *
      * @param  Carbon|null  $ahora  momento consultado; por defecto, ahora
@@ -96,7 +96,7 @@ class Calendario
     /**
      * Horas de recogida que se pueden ofrecer un día: de 15 en 15 minutos
      * desde la apertura de cada turno y antes de su cierre, solo las que aún
-     * no han pasado (decisión 029).
+     * no han pasado.
      *
      * @param  CarbonInterface  $dia  fecha prevista del pedido
      * @param  Carbon|null  $ahora  momento consultado; por defecto, ahora

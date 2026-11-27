@@ -15,7 +15,7 @@ use Illuminate\Validation\Rule;
 /**
  * Nombre, teléfono y correo opcional, con las mismas reglas que el pedido. El
  * personal no toca la contraseña: la cuenta la crea el propio cliente. Dos
- * invitados pueden compartir correo (decisión 031), pero el de un cliente con
+ * invitados pueden compartir correo, pero el de un cliente con
  * cuenta no puede ser el de otra cuenta.
  */
 class ClienteRequest extends FormRequest

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Pruebas del correo repetido entre invitados y de los límites de los correos (decisión 031).
+ * Pruebas del correo repetido entre invitados y de los límites de los correos.
  */
 
 namespace Tests\Feature;

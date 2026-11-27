@@ -14,7 +14,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Validation\Validator;
 
 /**
- * Nombre y teléfono del cliente, correo opcional (decisión 029), las unidades
+ * Nombre y teléfono del cliente, correo opcional, las unidades
  * de cada producto (de 0 a 20; al menos uno) y la hora de recogida. No hay
  * máximo de pizzas: los pedidos grandes son justo los que se piden por
  * teléfono (RF-03). Los productos tienen que seguir en la carta y sin agotar.

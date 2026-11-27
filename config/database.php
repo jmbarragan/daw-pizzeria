@@ -65,7 +65,7 @@ return [
         ],
 
         // informes (RF-20): focaccia_informes, de solo lectura; rol_consulta no le deja leer las
-        // contraseñas, los tokens ni la tabla de ajustes (decisión 032)
+        // contraseñas, los tokens ni la tabla de ajustes
         'informes' => [
             'driver' => 'mysql',
             'host' => env('DB_HOST', '127.0.0.1'),

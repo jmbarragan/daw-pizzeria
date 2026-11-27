@@ -7,5 +7,5 @@
 
 use Illuminate\Support\Facades\Schedule;
 
-// pedidos pendientes que ya no se pueden recoger (decisión 030)
+// pedidos pendientes que ya no se pueden recoger
 Schedule::command('pedidos:rechazar-pasados')->everyFifteenMinutes()->withoutOverlapping();

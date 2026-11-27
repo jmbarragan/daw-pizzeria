@@ -58,7 +58,7 @@
             @endforeach
         </tbody>
         <tfoot>
-            <tr><th scope="row" colspan="2">Total</th><th class="text-end">{{ number_format((float) $total, 2, ',', '.') }} €</th></tr>
+            <tr><td colspan="2" class="fw-bold">Total</td><td class="text-end fw-bold">{{ number_format((float) $total, 2, ',', '.') }} €</td></tr>
         </tfoot>
     </table>
     <p>Pago en el local, al recogerlo.</p>

@@ -19,8 +19,8 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 /**
- * Todo va en una transacción: el cliente (uno nuevo por pedido, decisión
- * 028), el pedido con su código y su token (pendiente si llega por la web,
+ * Todo va en una transacción: el cliente (uno nuevo por pedido), el pedido
+ * con su código y su token (pendiente si llega por la web,
  * aceptado si llega por teléfono) y las líneas con el nombre y el precio del
  * momento. Si el código sorteado ya existe, se sortea
  * otro; MySQL deshace solo esa sentencia, así que la transacción sigue. Al

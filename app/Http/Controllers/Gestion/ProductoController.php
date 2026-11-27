@@ -22,7 +22,7 @@ use Illuminate\View\View;
  * Listado con búsqueda por nombre y filtro por categoría, alta, modificación
  * con sus alérgenos, borrado y vuelta a la carta. Un producto con ventas no
  * se borra: se retira, para que los pedidos que lo incluyen sigan cuadrando
- * (CU-14, 6a); si se arrepienten, vuelve con «Volver a la carta» (decisión 026).
+ * (CU-14, 6a); si se arrepienten, vuelve con «Volver a la carta».
  */
 class ProductoController extends Controller
 {
@@ -151,7 +151,7 @@ class ProductoController extends Controller
     }
 
     /**
-     * Devuelve a la carta un producto retirado (decisión 026).
+     * Devuelve a la carta un producto retirado.
      *
      * @param  Producto  $producto  producto de la dirección
      * @return RedirectResponse

@@ -65,7 +65,7 @@ class ProductoRequest extends FormRequest
     /**
      * Mensajes con las palabras de la pantalla. El nombre repetido avisa de
      * que puede ser un producto retirado, que no sale en la carta pero sigue
-     * guardando su nombre (decisión 026).
+     * guardando su nombre.
      *
      * @return array<string, string>
      */

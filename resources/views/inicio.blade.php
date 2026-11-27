@@ -8,25 +8,20 @@
 
     <section aria-labelledby="titulo-horario" class="mt-5" style="max-width: 32rem">
         <h2 id="titulo-horario" class="h4">Horario de los próximos días</h2>
-        <table class="table table-sm">
-            <caption class="visually-hidden">Turnos de apertura de los próximos siete días</caption>
-            <tbody>
-                @foreach ($dias as $fecha => $turnos)
-                    @php($dia = \Illuminate\Support\Carbon::parse($fecha))
-                    <tr>
-                        <th scope="row" class="fw-normal">
-                            {{ $dia->isToday() ? 'Hoy' : ucfirst($dia->locale('es')->isoFormat('dddd D/MM')) }}
-                        </th>
-                        <td>
-                            @forelse ($turnos as $turno)
-                                {{ substr($turno->hora_apertura, 0, 5) }}–{{ substr($turno->hora_cierre, 0, 5) }}@if (! $loop->last) y @endif
-                            @empty
-                                Cerrado
-                            @endforelse
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
+        <dl class="row mb-0 border-top pt-2">
+            @foreach ($dias as $fecha => $turnos)
+                @php($dia = \Illuminate\Support\Carbon::parse($fecha))
+                <dt class="col-5 fw-normal">
+                    {{ $dia->isToday() ? 'Hoy' : ucfirst($dia->locale('es')->isoFormat('dddd D/MM')) }}
+                </dt>
+                <dd class="col-7 mb-2">
+                    @forelse ($turnos as $turno)
+                        {{ substr($turno->hora_apertura, 0, 5) }}–{{ substr($turno->hora_cierre, 0, 5) }}@if (! $loop->last) y @endif
+                    @empty
+                        Cerrado
+                    @endforelse
+                </dd>
+            @endforeach
+        </dl>
     </section>
 </x-plantilla.publica>

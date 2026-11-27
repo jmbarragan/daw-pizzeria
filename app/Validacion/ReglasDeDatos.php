@@ -28,7 +28,7 @@ final class ReglasDeDatos
      * con avisos (comentarios entre paréntesis, partes entre comillas), y como
      * mucho 254 caracteres, el límite de la columna y de la propia norma. Así
      * una misma dirección no se puede escribir de varias maneras para saltarse
-     * el límite de pedidos por correo (decisión 031).
+     * el límite de pedidos por correo.
      *
      * @return list<string>
      */

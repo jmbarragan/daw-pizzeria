@@ -106,7 +106,7 @@ return [
             'expire' => 60,
             'throttle' => 60,
         ],
-        // tabla propia: un correo puede ser a la vez de un empleado y de un cliente (decisión 032)
+        // tabla propia: un correo puede ser a la vez de un empleado y de un cliente
         'clientes' => [
             'provider' => 'clientes',
             'table' => 'recuperacion_clientes',

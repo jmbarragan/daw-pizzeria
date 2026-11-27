@@ -21,7 +21,7 @@ use Illuminate\View\View;
  * Un cliente sin pedidos se borra. Uno con pedidos se anonimiza: se quitan el
  * teléfono, el correo y la contraseña y se conserva el nombre, que siguen
  * necesitando los pedidos y los informes. Mientras tenga un pedido sin cerrar
- * no se toca, porque su correo hace falta para avisarle (decisión 032).
+ * no se toca, porque su correo hace falta para avisarle.
  */
 class ClienteController extends Controller
 {

@@ -10,6 +10,7 @@
 
     @if ($lineas->isEmpty())
         <p>Todavía no has añadido nada.</p>
+        <p>Elige en la carta lo que te apetezca y vuelve aquí: verás cuántas unidades llevas de cada cosa, su precio y el total antes de enviar el pedido. Se paga al recogerlo en el local.</p>
         <a href="{{ route('carta') }}" class="btn btn-primary">Ver la carta</a>
     @else
         <x-estado-del-local :abierto="$abierto" :siguiente="$siguiente" :telefono="$telefono" />
@@ -50,7 +51,7 @@
                                     <button type="submit" class="btn btn-sm btn-outline-secondary" @disabled($unidades <= 1 || ! $producto->disponible)
                                             aria-label="Una unidad menos de {{ $producto->nombre }}">−</button>
                                 </form>
-                                <span class="mx-2" aria-label="{{ $unidades }} unidades">{{ $unidades }}</span>
+                                <span class="mx-2">{{ $unidades }}<span class="visually-hidden"> unidades</span></span>
                                 <form method="POST" action="{{ route('cesta.cambiar', $producto) }}" class="d-inline">
                                     @csrf
                                     @method('PATCH')
@@ -75,7 +76,7 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th scope="row" colspan="2">Total</th>
+                        <td colspan="2" class="fw-bold">Total</td>
                         <td class="text-end fw-bold text-nowrap">{{ number_format($total, 2, ',', '.') }} €</td>
                         <td></td>
                     </tr>

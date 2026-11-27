@@ -110,7 +110,7 @@ class Cliente extends Authenticatable
     /**
      * Condición para buscar solo cuentas que pueden entrar: con contraseña, el
      * correo verificado y sin anonimizar. Como varios invitados pueden
-     * compartir correo (decisión 031), el acceso y la recuperación la añaden a
+     * compartir correo, el acceso y la recuperación la añaden a
      * sus credenciales para no dar nunca con un invitado.
      *
      * @return Closure(Builder<Cliente>): void

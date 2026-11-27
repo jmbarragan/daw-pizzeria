@@ -20,7 +20,7 @@ use Illuminate\Validation\Validator;
  * Antes de guardar se comprueban dos cosas que, si no, acabarían en un error
  * de MySQL: que no se solape con otro turno del mismo día (el disparador lo
  * impide igualmente) y que los pedidos en curso del turno sigan cabiendo en
- * las horas nuevas (decisión 026).
+ * las horas nuevas.
  */
 class TurnoRequest extends FormRequest
 {
@@ -145,7 +145,7 @@ class TurnoRequest extends FormRequest
 
     /**
      * Al editar, cada pedido aceptado o listo para recoger tiene que seguir
-     * dentro de las horas nuevas (decisión 026).
+     * dentro de las horas nuevas.
      *
      * @param  Validator  $validador  validador del formulario
      * @return void
