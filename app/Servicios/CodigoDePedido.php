@@ -13,7 +13,7 @@ use Random\RandomException;
  * Seis hexadecimales en mayúsculas sorteados con random_bytes y las dos
  * últimas cifras del año de la fecha prevista, por ejemplo 7B3E0A26. Lo
  * genera PHP y no el disparador para poder calcular el enlace de seguimiento
- * antes de guardar el pedido (decisión 028); si el código ya existe, el
+ * antes de guardar el pedido; si el código ya existe, el
  * registro del pedido pide otro.
  */
 class CodigoDePedido

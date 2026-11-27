@@ -5,8 +5,8 @@ use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 
 /**
- * Correo único solo para los clientes con cuenta (decisión 031). Un invitado
- * es un cliente sin contraseña, y cada pedido crea el suyo (decisión 028), así
+ * Correo único solo para los clientes con cuenta. Un invitado
+ * es un cliente sin contraseña, y cada pedido crea el suyo, así
  * que el mismo correo puede repetirse entre invitados. El índice funcional
  * deja fuera a los invitados porque MySQL admite varios NULL en un índice
  * único.

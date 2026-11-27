@@ -23,7 +23,7 @@ use Illuminate\View\View;
  * contraseña. Hasta abrir el enlace del correo no se puede entrar. El acceso
  * comparte con el del personal el límite de intentos y el bloqueo de IP
  * (RNF-01), y solo encuentra cuentas activas: nunca a un invitado que use el
- * mismo correo (decisión 031).
+ * mismo correo.
  */
 class CuentaController extends Controller
 {

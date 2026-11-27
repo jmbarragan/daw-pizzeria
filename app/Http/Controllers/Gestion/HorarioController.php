@@ -19,7 +19,7 @@ use Illuminate\View\View;
 /**
  * Se ven 14 días seguidos; una fecha sin turnos está cerrada, como un lunes o
  * un festivo, y dos turnos el mismo día forman un turno partido. Un turno con
- * pedidos no se borra (decisión 026): el sistema explica el motivo.
+ * pedidos no se borra: el sistema explica el motivo.
  */
 class HorarioController extends Controller
 {

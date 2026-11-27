@@ -14,7 +14,7 @@ use Illuminate\Support\Collection;
  * los precios se leen siempre de la carta, así que la cesta enseña el precio
  * de ahora. Reúne las reglas que comparten la carta, la cesta y el envío del
  * pedido: de 1 a 20 unidades por producto y, como mucho, el número de pizzas
- * del ajuste maximo_pizzas, contando solo la categoría «Pizzas» (decisión 028).
+ * del ajuste maximo_pizzas, contando solo la categoría «Pizzas».
  */
 class Cesta
 {

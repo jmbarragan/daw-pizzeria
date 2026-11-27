@@ -17,8 +17,8 @@ use Illuminate\Support\Facades\Cache;
  * llegar la suma a diez se crea el bloqueo, y el disparador de bloqueos_ip
  * decide si dura 24 horas o es permanente.
  *
- * Un acceso correcto solo borra los fallos de la cuenta que ha entrado
- * (decisión 023). Si pusiera a cero toda la IP, alguien con una cuenta propia
+ * Un acceso correcto solo borra los fallos de la cuenta que ha entrado.
+ * Si pusiera a cero toda la IP, alguien con una cuenta propia
  * podría probar nueve contraseñas de otra persona, entrar con la suya y volver
  * a empezar. Y como todo va en la misma entrada, los fallos de una cuenta
  * caducan a la vez que los de la IP: no sobreviven a la ventana para restarse

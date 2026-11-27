@@ -192,10 +192,11 @@ class AccesoPersonalTest extends TestCase
         $usuario = $this->crearPersonal();
         $aviso = 'Si el correo es del personal, te llegará un enlace para elegir otra contraseña.';
 
-        $this->withServerVariables(['HTTP_HOST' => 'atacante.example'])
-            ->post('/gestion/contrasena', ['email' => $usuario->email])
+        // por https, como llega con APP_URL en https (por http se redirigiría), y con otro nombre de máquina
+        $this->post('https://atacante.example/gestion/contrasena', ['email' => $usuario->email])
             ->assertSessionHas('estado', $aviso);
-        $this->post('/gestion/contrasena', ['email' => 'nadie@focaccia.example'])->assertSessionHas('estado', $aviso);
+        $this->post('https://atacante.example/gestion/contrasena', ['email' => 'nadie@focaccia.example'])
+            ->assertSessionHas('estado', $aviso);
 
         Notification::assertSentTo($usuario, RecuperarContrasena::class, function (RecuperarContrasena $correo) use ($usuario) {
             $mensaje = $correo->toMail($usuario);

@@ -189,7 +189,7 @@ class ProductosTest extends TestCase
 
     /**
      * Con ventas se retira en lugar de borrarse, la venta conserva su nombre y
-     * su precio, y el producto puede volver a la carta (decisión 026).
+     * su precio, y el producto puede volver a la carta.
      *
      * @return void
      */

@@ -54,6 +54,9 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
 
+    // Proxies cuyas cabeceras X-Forwarded-* acepta la aplicación, separados por comas (App\Http\Middleware\ConfiarEnLosProxies)
+    'proxies_de_confianza' => env('PROXIES_DE_CONFIANZA', ''),
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone

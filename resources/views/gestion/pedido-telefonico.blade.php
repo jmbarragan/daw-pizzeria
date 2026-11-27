@@ -41,7 +41,7 @@
                 @error('unidades') <div class="alert alert-danger py-2">{{ $message }}</div> @enderror
                 @error('unidades.*') <div class="alert alert-danger py-2">{{ $message }}</div> @enderror
                 @foreach ($categorias as $categoria)
-                    <h3 class="h6 mt-3">{{ $categoria->nombre }}</h3>
+                    <h2 class="h6 mt-3">{{ $categoria->nombre }}</h2>
                     <div class="row row-cols-1 row-cols-md-2 g-2">
                         @foreach ($categoria->productos as $producto)
                             <div class="col">
@@ -63,6 +63,7 @@
                 <div class="col-md-4">
                     <label for="hora" class="form-label">Recogida el {{ $dia->locale('es')->isoFormat('dddd D/MM') }}</label>
                     <select id="hora" name="hora" required @class(['form-select', 'is-invalid' => $errors->has('hora')])>
+                        <option value="">Elige la hora…</option>
                         @foreach ($franjas as $franja)
                             <option value="{{ $franja }}" @selected(old('hora') === $franja)>{{ $franja }}</option>
                         @endforeach

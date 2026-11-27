@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
  * La aplicación entra por defecto con el usuario de MySQL de la zona pública
  * (focaccia_web). En las rutas de gestión se pasa a focaccia_gestion, que
  * puede tocar la carta, los pedidos y el personal pero no borrar el histórico
- * (RNF-11, decisión 015).
+ * (RNF-11).
  */
 class UsarConexionDeGestion
 {

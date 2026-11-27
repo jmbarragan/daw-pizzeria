@@ -15,6 +15,12 @@
     --bs-primary-rgb: 155, 28, 28;
     --bs-link-color: var(--focaccia-rojo);
     --bs-link-hover-color: var(--focaccia-rojo-oscuro);
+    /* Bootstrap 5.3 pinta los enlaces con las versiones -rgb; sin ellas salían en su azul, 4,2:1 sobre el crema */
+    --bs-link-color-rgb: 155, 28, 28;
+    --bs-link-hover-color-rgb: 116, 21, 21;
+    /* el gris secundario de Bootstrap (#6c757d) se queda en 4,4:1 sobre el crema; este llega a 7:1 */
+    --bs-secondary-color: #4a5056;
+    --bs-secondary-rgb: 74, 80, 86;
     --bs-body-font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
@@ -30,6 +36,38 @@ body {
     --bs-btn-active-bg: var(--focaccia-rojo-oscuro);
 }
 
+/*
+ * Botones con borde: Bootstrap les pone el color al compilar, sin pasar por las variables, y su azul (#0d6efd)
+ * y su rojo (#dc3545) se quedan en 4,2:1 sobre el crema. Llevan el rojo de la casa (7,6:1) y uno más oscuro.
+ */
+.btn-outline-primary {
+    --bs-btn-color: var(--focaccia-rojo);
+    --bs-btn-border-color: var(--focaccia-rojo);
+    --bs-btn-hover-bg: var(--focaccia-rojo);
+    --bs-btn-hover-border-color: var(--focaccia-rojo);
+    --bs-btn-active-bg: var(--focaccia-rojo-oscuro);
+    --bs-btn-active-border-color: var(--focaccia-rojo-oscuro);
+}
+
+.btn-outline-danger {
+    --bs-btn-color: #a71d2a;
+    --bs-btn-border-color: #a71d2a;
+    --bs-btn-hover-bg: #a71d2a;
+    --bs-btn-hover-border-color: #a71d2a;
+    --bs-btn-active-bg: #861722;
+    --bs-btn-active-border-color: #861722;
+}
+
+/* Botón gris con borde: el mismo gris oscuro, para que el texto llegue a AA sobre el crema. */
+.btn-outline-secondary {
+    --bs-btn-color: #4a5056;
+    --bs-btn-border-color: #4a5056;
+    --bs-btn-hover-bg: #4a5056;
+    --bs-btn-hover-border-color: #4a5056;
+    --bs-btn-active-bg: #3b4045;
+    --bs-btn-active-border-color: #3b4045;
+}
+
 /* Botones y enlaces del menú de al menos 44 px de alto para el dedo en el móvil. */
 .btn,
 .nav-link,
@@ -37,6 +75,14 @@ body {
     min-height: 44px;
     display: inline-flex;
     align-items: center;
+}
+
+/*
+ * Los textos solo para lector de pantalla van con position: absolute. Si la caja de la tabla no está posicionada,
+ * se colocan respecto a la página, quedan fuera de la caja que se desplaza y el móvil ensancha la vista.
+ */
+.table-responsive {
+    position: relative;
 }
 
 /* Foco siempre visible al moverse con el teclado. */

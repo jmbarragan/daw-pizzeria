@@ -1,8 +1,71 @@
-# Servicios de apoyo para trabajar en local: MySQL 8.4 y Mailpit.
-# La aplicación se arranca aparte con «php artisan serve».
-# Los usuarios y contraseñas salen del fichero .env (ver .env.example).
+# La Focaccia di Trevi en Docker: la aplicación (web, cola de correos y
+# planificador), MySQL 8.4 y Mailpit. Se pone en marcha con «make start» o,
+# en Windows, con iniciar.ps1. Los usuarios y contraseñas salen del fichero
+# .env, que esas órdenes crean la primera vez (ver .env.example).
+#
+# Para trabajar en local sin la aplicación en Docker basta con levantar la base
+# y el correo: «docker compose up -d mysql mailpit» y «php artisan serve».
+
+# Lo que comparten los tres servicios de la aplicación: la imagen (se construye
+# una vez y la caché sirve a los otros dos), el .env y
+# las direcciones de MySQL y Mailpit dentro de la red de Docker, que mandan
+# sobre las del .env.
+x-aplicacion: &aplicacion
+  image: focaccia-trevi
+  build:
+    context: .
+    dockerfile: docker/app/Dockerfile
+  restart: unless-stopped
+  volumes:
+    - ./.env:/var/www/html/.env:ro
+    - almacen-aplicacion:/var/www/html/storage
+  environment: &entorno-aplicacion
+    DB_HOST: mysql
+    DB_PORT: "3306"
+    DB_USUARIOS_ANFITRION: "%"
+    # Las pruebas automáticas no se lanzan en Docker: sin base de pruebas, los permisos solo van a la de la aplicación
+    DB_BASE_PRUEBAS: ""
+    MAIL_HOST: mailpit
+    MAIL_PORT: "1025"
+    TZ: Europe/Madrid
 
 services:
+  web:
+    <<: *aplicacion
+    ports:
+      - "${APP_PUERTO:-8000}:80"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    # /up es la ruta de salud de Laravel: no abre sesión ni pasa por la redirección a https
+    healthcheck:
+      test: ["CMD", "curl", "-fs", "-o", "/dev/null", "http://localhost/up"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 180s
+
+  # Correos en cola con la conexión de gestión, para usar el servidor de correo de los ajustes
+  cola:
+    <<: *aplicacion
+    user: www-data
+    command: ["php", "artisan", "queue:work", "--sleep=3"]
+    environment:
+      <<: *entorno-aplicacion
+      DB_CONNECTION: gestion
+    depends_on:
+      web:
+        condition: service_healthy
+
+  # Rechazo de los pedidos pasados cada 15 minutos (routes/console.php)
+  planificador:
+    <<: *aplicacion
+    user: www-data
+    command: ["php", "artisan", "schedule:work"]
+    depends_on:
+      web:
+        condition: service_healthy
+
   mysql:
     image: mysql:8.4.13
     restart: unless-stopped
@@ -45,3 +108,4 @@ services:
 
 volumes:
   datos-mysql:
+  almacen-aplicacion:

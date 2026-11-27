@@ -24,7 +24,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
  * Siempre queda al menos un administrador activo (CU-20, 5a): el último no se
  * desactiva ni pierde el rol, y la comprobación bloquea las filas de los
  * administradores para que dos cambios a la vez no los dejen a cero. La cuenta
- * «Rechazo automático» (decisión 030) no sale ni se toca.
+ * «Rechazo automático» no sale ni se toca.
  */
 class UsuarioController extends Controller
 {

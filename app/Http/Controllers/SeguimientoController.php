@@ -29,6 +29,8 @@ class SeguimientoController extends Controller
      * @param  EnlaceDeSeguimiento  $enlaces  verificación del token
      * @param  AjustesPublicos  $ajustes  dirección y teléfono del local
      * @return View
+     *
+     * @throws HttpException 404 si el token no es válido, sin más datos
      */
     public function mostrar(string $token, EnlaceDeSeguimiento $enlaces, AjustesPublicos $ajustes): View
     {
@@ -50,6 +52,8 @@ class SeguimientoController extends Controller
      * @param  string  $token  token de la dirección
      * @param  EnlaceDeSeguimiento  $enlaces  verificación del token
      * @return View|RedirectResponse
+     *
+     * @throws HttpException 404 si el token no es válido, sin más datos
      */
     public function confirmarCancelacion(string $token, EnlaceDeSeguimiento $enlaces): View|RedirectResponse
     {
@@ -71,6 +75,8 @@ class SeguimientoController extends Controller
      * @param  CambiosDeEstado  $cambios  cambio condicionado a que siga pendiente
      * @param  AjustesPublicos  $ajustes  teléfono del local
      * @return RedirectResponse
+     *
+     * @throws HttpException 404 si el token no es válido, sin más datos
      */
     public function cancelar(string $token, EnlaceDeSeguimiento $enlaces, CambiosDeEstado $cambios, AjustesPublicos $ajustes): RedirectResponse
     {

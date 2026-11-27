@@ -108,6 +108,7 @@
                     @else
                         <label for="hora" class="form-label">Hora de recogida</label>
                         <select id="hora" name="hora" required @class(['form-select mb-3', 'is-invalid' => $errors->has('hora')])>
+                            <option value="">Elige la hora…</option>
                             @foreach ($franjas as $franja)
                                 <option value="{{ $franja }}" @selected(old('hora') === $franja)>{{ $franja }}</option>
                             @endforeach

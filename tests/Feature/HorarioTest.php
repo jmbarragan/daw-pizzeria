@@ -184,7 +184,7 @@ class HorarioTest extends TestCase
     }
 
     /**
-     * Un turno sin pedidos se borra; con pedidos, no (decisión 026).
+     * Un turno sin pedidos se borra; con pedidos, no.
      *
      * @return void
      */
@@ -205,7 +205,7 @@ class HorarioTest extends TestCase
 
     /**
      * Con un pedido aceptado para las 21:00, las horas pueden cambiar si lo
-     * siguen incluyendo, y no si lo dejan fuera (decisión 026).
+     * siguen incluyendo, y no si lo dejan fuera.
      *
      * @return void
      */
